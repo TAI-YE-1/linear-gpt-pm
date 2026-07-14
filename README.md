@@ -1,11 +1,15 @@
 # Codex × Superpowers × OpenSpec 全局工作流 v4 RC1
 
+> Status: release candidate. Automated package tests pass, while real Codex session compatibility still requires the manual smoke cases in `tests/manual-smoke-cases.md`.
+
 这是基于官方上游源码审计重构的候选安装包。它不复制 Superpowers 或 OpenSpec，而是在两者之上增加 Codex 适配和交付治理。
 
 ## 审计文档
 
 - [源码审计摘要](docs/SOURCE-AUDIT.md)
 - [完整上游源码审计原文](docs/SOURCE-AUDIT-FULL.md)
+
+完整原文是 RC1 实现前形成的历史审计快照；涉及“下一阶段”或“尚未生成安装包”的表述反映审计时点。当前实现和限制以本 README、`CHANGELOG.md` 与 `tests/manual-smoke-cases.md` 为准。
 
 完整原文固定审计了以下官方仓库版本：
 
@@ -138,6 +142,8 @@ python .\tests\run_smoke_tests.py
 - 验证 task diff 不包含 task 开始前已有修改；
 - 在临时 HOME 验证安装、重复安装和卸载。
 
+`tests/last-smoke-report.json` 是本地生成产物，已由 `.gitignore` 排除，不属于发布源码。
+
 ## 无 commit SDD adapter
 
 `sdd-no-commit-adapter` 使用临时 `GIT_INDEX_FILE`：
@@ -200,3 +206,11 @@ role 文件不写死 `model` 或 `model_reasoning_effort`。`codex-subagent-rout
 - 真实项目中 OpenSpec store/profile/schema 的动态解析。
 
 详见 `tests/manual-smoke-cases.md`。
+
+## 开源许可与第三方项目
+
+本项目以 [Apache License 2.0](LICENSE) 开源。第三方项目归属和许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+本仓库不打包复制 Codex、Superpowers 或 OpenSpec 的上游源码。用户需要分别按上游官方方式安装和更新它们。本仓库提供兼容层、Codex roles、workflow Skills、安装器、测试和审计文档。
+
+参与贡献前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按 [SECURITY.md](SECURITY.md) 提交。版本变化见 [CHANGELOG.md](CHANGELOG.md)。
