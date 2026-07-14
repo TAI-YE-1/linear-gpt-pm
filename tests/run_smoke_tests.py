@@ -115,6 +115,19 @@ def installer_test(package: Path, work: Path) -> dict:
     run([sys.executable, str(package / "install.py"), "--apply", "--home", str(home)])
     agents_text2 = (codex / "AGENTS.md").read_text(encoding="utf-8")
     installed["idempotentMarker"] = agents_text2.count("CODEX-SUPERPOWERS-OPENSPEC-V4:START") == 1
+    install_backups = [
+        path
+        for path in (codex / "workflow-backups").iterdir()
+        if path.is_dir() and not path.name.startswith("uninstall-")
+    ]
+    installed["relativeSkillBackup"] = any(
+        (path / ".agents" / "skills" / "openspec-superpowers-bridge" / "SKILL.md").is_file()
+        for path in install_backups
+    )
+    installed["relativeRoleBackup"] = any(
+        (path / ".codex" / "agents" / "sp_architect.toml").is_file()
+        for path in install_backups
+    )
 
     run([sys.executable, str(package / "uninstall.py"), "--apply", "--home", str(home)])
     final_text = (codex / "AGENTS.md").read_text(encoding="utf-8")
@@ -124,6 +137,16 @@ def installer_test(package: Path, work: Path) -> dict:
         "skillsRemoved": not (home / ".agents" / "skills" / "codex-subagent-routing").exists(),
         "rolesRemoved": not (codex / "agents" / "sp_architect.toml").exists(),
     }
+    uninstall_backups = [
+        path
+        for path in (codex / "workflow-backups").iterdir()
+        if path.is_dir() and path.name.startswith("uninstall-")
+    ]
+    uninstalled["relativeUninstallBackup"] = any(
+        (path / ".agents" / "skills" / "codex-subagent-routing" / "SKILL.md").is_file()
+        and (path / ".codex" / "agents" / "sp_architect.toml").is_file()
+        for path in uninstall_backups
+    )
     assertions = {**installed, **uninstalled}
     return {
         "passed": all(assertions.values()),
