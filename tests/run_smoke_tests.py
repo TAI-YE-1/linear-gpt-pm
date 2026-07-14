@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -37,7 +38,7 @@ def adapter_test(package: Path, work: Path) -> dict:
     repo = work / "repo"
     repo.mkdir()
     run(["git", "init"], repo)
-    run(["git", "config", "user.email", "smoke@example.com"], repo)
+    run(["git", "config", "user.email", "smoke@local"], repo)
     run(["git", "config", "user.name", "Smoke Test"], repo)
     (repo / "app.txt").write_text("line 1\n", encoding="utf-8")
     run(["git", "add", "app.txt"], repo)
@@ -101,6 +102,9 @@ def installer_test(package: Path, work: Path) -> dict:
     installed = {
         "existingTextPreserved": "Keep me." in agents_text,
         "markerInstalledOnce": agents_text.count("CODEX-SUPERPOWERS-OPENSPEC-V4:START") == 1,
+        "noHardcodedRecipient": re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", agents_text) is None,
+        "languageFollowsUserOrProject": "使用用户当前语言或项目明确约定的语言" in agents_text,
+        "notificationsDefaultOff": "默认不发送完成邮件、消息或通知" in agents_text,
         "skillsInstalled": all((home / ".agents" / "skills" / name / "SKILL.md").is_file() for name in [
             "openspec-superpowers-bridge",
             "codex-subagent-routing",
