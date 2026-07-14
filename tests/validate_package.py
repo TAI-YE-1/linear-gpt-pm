@@ -138,21 +138,55 @@ def validate(package: Path) -> dict:
     if not adapter.is_file():
         fail(errors, "missing sdd_adapter.py")
 
-    for required in ("install.py", "uninstall.py", "Install-CodexWorkflow.ps1", "Uninstall-CodexWorkflow.ps1"):
+    required_release_files = (
+        "install.py",
+        "uninstall.py",
+        "Install-CodexWorkflow.ps1",
+        "Uninstall-CodexWorkflow.ps1",
+        "LICENSE",
+        "NOTICE",
+        "THIRD_PARTY_NOTICES.md",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "CHANGELOG.md",
+        ".gitignore",
+    )
+    for required in required_release_files:
         if not (package / required).is_file():
             fail(errors, f"missing {required}")
+
+    license_path = package / "LICENSE"
+    if license_path.is_file() and "Apache License" not in license_path.read_text(encoding="utf-8", errors="replace"):
+        fail(errors, "LICENSE must contain the Apache License 2.0 text")
+
+    gitignore_path = package / ".gitignore"
+    if gitignore_path.is_file() and "tests/last-smoke-report.json" not in gitignore_path.read_text(encoding="utf-8"):
+        fail(errors, ".gitignore must exclude tests/last-smoke-report.json")
+
+    full_audit = package / "docs" / "SOURCE-AUDIT-FULL.md"
+    if full_audit.is_file() and "历史审计快照" not in full_audit.read_text(encoding="utf-8"):
+        fail(errors, "full source audit must be labeled as a historical snapshot")
 
     all_text = "\n".join(
         path.read_text(encoding="utf-8", errors="replace")
         for path in package.rglob("*")
-        if path.is_file() and path.suffix.lower() in {".md", ".toml", ".yaml", ".py", ".ps1"}
+        if path.is_file()
+        and path.resolve() != Path(__file__).resolve()
+        and path.suffix.lower() in {".md", ".toml", ".yaml", ".py", ".ps1"}
     )
     banned = [
         "[features]\nmulti_agent_v2 = true",
+        "/mnt/data/codex-superpowers-openspec-v4-rc1",
+        "/tmp/codex-workflow-smoke-",
     ]
     for pattern in banned:
         if pattern in all_text:
             fail(errors, f"banned static configuration found: {pattern!r}")
+
+    if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", all_text):
+        fail(errors, "release text must not contain hard-coded email addresses")
+    if re.search(r"[A-Za-z]:\\Users\\[^\\]+\\", all_text):
+        fail(errors, "release text must not contain a user-specific Windows home path")
 
     return {
         "package": str(package),
