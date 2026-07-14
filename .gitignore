@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Generated test output
+tests/last-smoke-report.json
+
+# Local installer backups and temporary files
+workflow-backups/
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
