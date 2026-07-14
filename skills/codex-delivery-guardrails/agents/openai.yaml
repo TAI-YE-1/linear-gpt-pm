@@ -1,0 +1,6 @@
+interface:
+  display_name: "Codex Delivery Guardrails"
+  short_description: "Control Git, SDD commits, tests, CI, production and completion claims."
+  default_prompt: "Use $codex-delivery-guardrails for this delivery-sensitive task."
+policy:
+  allow_implicit_invocation: false

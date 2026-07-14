@@ -1,0 +1,37 @@
+{
+  "package": "codex-superpowers-openspec-v4-rc1",
+  "version": "4.0.0-rc1",
+  "generatedAtUtc": "2026-07-14T02:23:15.004414+00:00",
+  "auditedUpstream": {
+    "openai/codex": "80c6cd3014e4236e99bd06e67f31fcb95c9ee906",
+    "obra/superpowers": "d884ae04edebef577e82ff7c4e143debd0bbec99",
+    "Fission-AI/OpenSpec": "0a99f410457271aa773d8b106f03f637f7c6b3c0"
+  },
+  "skills": [
+    "openspec-superpowers-bridge",
+    "codex-subagent-routing",
+    "codex-delivery-guardrails",
+    "sdd-no-commit-adapter"
+  ],
+  "roles": [
+    "sp_architect",
+    "sp_final_reviewer",
+    "sp_implementation_worker",
+    "sp_mechanical_worker",
+    "sp_readonly_researcher",
+    "sp_senior_implementation",
+    "sp_task_reviewer"
+  ],
+  "installer": {
+    "dryRunByDefault": true,
+    "modifiesConfigToml": false,
+    "usesNetwork": false,
+    "backsUpExistingFiles": true
+  },
+  "automatedSmokeTests": {
+    "passed": true,
+    "report": "tests/last-smoke-report.json",
+    "powershellRuntimeTested": false,
+    "realCodexSessionTested": false
+  }
+}

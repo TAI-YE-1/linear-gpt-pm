@@ -1,0 +1,54 @@
+{
+  "static": {
+    "package": "/mnt/data/codex-superpowers-openspec-v4-rc1",
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "skills": [
+      "codex-delivery-guardrails",
+      "codex-subagent-routing",
+      "openspec-superpowers-bridge",
+      "sdd-no-commit-adapter"
+    ],
+    "roles": [
+      "sp_architect",
+      "sp_final_reviewer",
+      "sp_implementation_worker",
+      "sp_mechanical_worker",
+      "sp_readonly_researcher",
+      "sp_senior_implementation",
+      "sp_task_reviewer"
+    ],
+    "agentsBlockBytes": 5348
+  },
+  "adapter": {
+    "passed": true,
+    "assertions": {
+      "realIndexUnchanged": true,
+      "headUnchanged": true,
+      "taskFileInReview": true,
+      "taskChangeInReview": true,
+      "preexistingFileNotAttributed": true,
+      "stagedFileNotAttributed": true,
+      "noNewCommit": true
+    },
+    "review": "/tmp/codex-workflow-smoke-np5uukvr/adapter/review.md"
+  },
+  "installer": {
+    "passed": true,
+    "assertions": {
+      "existingTextPreserved": true,
+      "markerInstalledOnce": true,
+      "skillsInstalled": true,
+      "rolesInstalled": true,
+      "configUntouched": true,
+      "idempotentMarker": true,
+      "existingTextStillPreserved": true,
+      "markerRemoved": true,
+      "skillsRemoved": true,
+      "rolesRemoved": true
+    },
+    "installOutput": "{\n  \"package\": \"/mnt/data/codex-superpowers-openspec-v4-rc1\",\n  \"valid\": true,\n  \"errors\": [],\n  \"warnings\": [],\n  \"skills\": [\n    \"codex-delivery-guardrails\",\n    \"codex-subagent-routing\",\n    \"openspec-superpowers-bridge\",\n    \"sdd-no-commit-adapter\"\n  ],\n  \"roles\": [\n    \"sp_architect\",\n    \"sp_final_reviewer\",\n    \"sp_implementation_worker\",\n    \"sp_mechanical_worker\",\n    \"sp_readonly_researcher\",\n    \"sp_senior_implementation\",\n    \"sp_task_reviewer\"\n  ],\n  \"agentsBlockBytes\": 5348\n}\n{\n  \"mode\": \"apply\",\n  \"home\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home\",\n  \"backupRoot\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/workflow-backups/20260714T022220781607Z\",\n  \"actions\": [\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/skills/openspec-superpowers-bridge\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.agents/skills/openspec-superpowers-bridge\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/skills/codex-subagent-routing\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.agents/skills/codex-subagent-routing\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/skills/codex-delivery-guardrails\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.agents/skills/codex-delivery-guardrails\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/skills/sdd-no-commit-adapter\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.agents/skills/sdd-no-commit-adapter\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_architect.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_architect.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_final_reviewer.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_final_reviewer.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_implementation_worker.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_implementation_worker.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_mechanical_worker.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_mechanical_worker.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_readonly_researcher.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_readonly_researcher.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_senior_implementation.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_senior_implementation.toml\",\n      \"exists\": false\n    },\n    {\n      \"source\": \"/mnt/data/codex-superpowers-openspec-v4-rc1/roles/sp_task_reviewer.toml\",\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/agents/sp_task_reviewer.toml\",\n      \"exists\": false\n    },\n    {\n      \"target\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/AGENTS.md\",\n      \"exists\": true,\n      \"operation\": \"append marked block\",\n      \"backup\": \"/tmp/codex-workflow-smoke-np5uukvr/installer/home/.codex/workflow-backups/20260714T022220781607Z/.codex/AGENTS.md\"\n    }\n  ],\n  \"configTomlModified\": false,\n  \"networkUsed\": false\n}\n"
+  },
+  "passed": true
+}

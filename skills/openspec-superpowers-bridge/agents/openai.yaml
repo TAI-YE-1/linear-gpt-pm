@@ -1,0 +1,6 @@
+interface:
+  display_name: "OpenSpec × Superpowers Bridge"
+  short_description: "Bridge OpenSpec artifacts with Superpowers without duplicate controllers."
+  default_prompt: "Use $openspec-superpowers-bridge to coordinate this OpenSpec task."
+policy:
+  allow_implicit_invocation: false

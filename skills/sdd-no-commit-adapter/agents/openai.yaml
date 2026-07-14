@@ -1,0 +1,6 @@
+interface:
+  display_name: "SDD No-Commit Adapter"
+  short_description: "Create task tree snapshots and review packages without Git commits."
+  default_prompt: "Use $sdd-no-commit-adapter for checkpoint-free SDD."
+policy:
+  allow_implicit_invocation: false
