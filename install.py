@@ -38,14 +38,28 @@ def replace_marked_block(existing: str, block: str) -> str:
     return existing.rstrip() + "\n\n" + block.strip() + "\n"
 
 
-def copy_with_backup(source: Path, target: Path, backup_root: Path, apply: bool) -> dict:
+def backup_destination(target: Path, home: Path, backup_root: Path) -> Path:
+    """Return a compact backup path rooted under the selected home directory."""
+    try:
+        relative = target.relative_to(home)
+    except ValueError as exc:
+        raise RuntimeError(f"refusing to back up path outside home: {target}") from exc
+    return backup_root / relative
+
+
+def copy_with_backup(
+    source: Path,
+    target: Path,
+    home: Path,
+    backup_root: Path,
+    apply: bool,
+) -> dict:
     item = {"source": str(source), "target": str(target), "exists": target.exists()}
     if not apply:
         return item
 
     if target.exists():
-        relative = Path(*target.parts[1:]) if target.is_absolute() else target
-        backup = backup_root / relative
+        backup = backup_destination(target, home, backup_root)
         backup.parent.mkdir(parents=True, exist_ok=True)
         if target.is_dir():
             shutil.copytree(target, backup, dirs_exist_ok=True)
@@ -86,6 +100,7 @@ def main() -> int:
             copy_with_backup(
                 package / "skills" / skill,
                 agents_home / "skills" / skill,
+                home,
                 backup_root,
                 args.apply,
             )
@@ -96,6 +111,7 @@ def main() -> int:
             copy_with_backup(
                 role,
                 codex_home / "agents" / role.name,
+                home,
                 backup_root,
                 args.apply,
             )
