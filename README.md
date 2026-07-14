@@ -2,6 +2,19 @@
 
 这是基于官方上游源码审计重构的候选安装包。它不复制 Superpowers 或 OpenSpec，而是在两者之上增加 Codex 适配和交付治理。
 
+## 审计文档
+
+- [源码审计摘要](docs/SOURCE-AUDIT.md)
+- [完整上游源码审计原文](docs/SOURCE-AUDIT-FULL.md)
+
+完整原文固定审计了以下官方仓库版本：
+
+```text
+openai/codex@80c6cd3014e4236e99bd06e67f31fcb95c9ee906
+obra/superpowers@d884ae04edebef577e82ff7c4e143debd0bbec99
+Fission-AI/OpenSpec@0a99f410457271aa773d8b106f03f637f7c6b3c0
+```
+
 ## 包含内容
 
 ```text
