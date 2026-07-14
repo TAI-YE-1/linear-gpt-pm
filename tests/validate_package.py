@@ -61,6 +61,12 @@ def validate(package: Path) -> dict:
             fail(errors, "AGENTS start marker missing or duplicated")
         if text.count("CODEX-SUPERPOWERS-OPENSPEC-V4:END") != 1:
             fail(errors, "AGENTS end marker missing or duplicated")
+        if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text):
+            fail(errors, "AGENTS block must not contain a hard-coded email address")
+        if "Gmail connector" in text:
+            fail(errors, "AGENTS block must not contain connector-specific notification rules")
+        if "默认使用中文" in text:
+            fail(errors, "AGENTS block must not hard-code a user language preference")
 
     discovered_skills: set[str] = set()
     for skill_dir in sorted((package / "skills").glob("*")):
