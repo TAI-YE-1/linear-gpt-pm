@@ -38,8 +38,11 @@ def remove_marked_block(text: str) -> str:
     return "\n\n".join(pieces).rstrip() + ("\n" if pieces else "")
 
 
-def backup_path(target: Path, backup_root: Path) -> Path:
-    relative = Path(*target.parts[1:]) if target.is_absolute() else target
+def backup_path(target: Path, home: Path, backup_root: Path) -> Path:
+    try:
+        relative = target.relative_to(home)
+    except ValueError as exc:
+        raise RuntimeError(f"refusing to back up path outside home: {target}") from exc
     backup = backup_root / relative
     backup.parent.mkdir(parents=True, exist_ok=True)
     if target.is_dir():
@@ -69,7 +72,7 @@ def main() -> int:
     for target in targets:
         item = {"target": str(target), "exists": target.exists(), "operation": "remove"}
         if args.apply and target.exists():
-            item["backup"] = str(backup_path(target, backup_root))
+            item["backup"] = str(backup_path(target, home, backup_root))
             if target.is_dir():
                 shutil.rmtree(target)
             else:
@@ -86,7 +89,7 @@ def main() -> int:
         original = agents_target.read_text(encoding="utf-8")
         updated = remove_marked_block(original)
         if args.apply and updated != original:
-            agents_item["backup"] = str(backup_path(agents_target, backup_root))
+            agents_item["backup"] = str(backup_path(agents_target, home, backup_root))
             if updated:
                 agents_target.write_text(updated, encoding="utf-8")
             else:
