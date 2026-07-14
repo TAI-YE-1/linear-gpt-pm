@@ -163,9 +163,9 @@ def validate(package: Path) -> dict:
     if gitignore_path.is_file() and "tests/last-smoke-report.json" not in gitignore_path.read_text(encoding="utf-8"):
         fail(errors, ".gitignore must exclude tests/last-smoke-report.json")
 
-    full_audit = package / "docs" / "SOURCE-AUDIT-FULL.md"
-    if full_audit.is_file() and "历史审计快照" not in full_audit.read_text(encoding="utf-8"):
-        fail(errors, "full source audit must be labeled as a historical snapshot")
+    readme_path = package / "README.md"
+    if readme_path.is_file() and "历史审计快照" not in readme_path.read_text(encoding="utf-8"):
+        fail(errors, "README must label the full source audit as a historical snapshot")
 
     all_text = "\n".join(
         path.read_text(encoding="utf-8", errors="replace")
