@@ -54,13 +54,17 @@ def validate(package: Path) -> dict:
         fail(errors, "missing config/AGENTS.block.md")
     else:
         block = block_path.read_bytes()
-        if len(block) >= 32 * 1024:
-            fail(errors, f"AGENTS block is {len(block)} bytes; must stay below 32 KiB")
+        if len(block) >= 8 * 1024:
+            fail(errors, f"AGENTS block is {len(block)} bytes; must stay below 8 KiB")
         text = block.decode("utf-8")
         if text.count("CODEX-SUPERPOWERS-OPENSPEC-V4:START") != 1:
             fail(errors, "AGENTS start marker missing or duplicated")
         if text.count("CODEX-SUPERPOWERS-OPENSPEC-V4:END") != 1:
             fail(errors, "AGENTS end marker missing or duplicated")
+        if "编程任务开始时" in text:
+            fail(errors, "AGENTS block must not force every coding task through a workflow router")
+        if "简单、明确、低风险" not in text:
+            fail(errors, "AGENTS block must preserve a direct path for simple tasks")
         if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", text):
             fail(errors, "AGENTS block must not contain a hard-coded email address")
         if "Gmail connector" in text:
