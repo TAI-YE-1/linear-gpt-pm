@@ -37,13 +37,25 @@ Uninstall-CodexWorkflow.ps1
 
 核心原则：
 
-- `using-superpowers` 仍是编程任务唯一顶层方法入口；
+- 全局 `AGENTS` 只保留跨项目稳定基线，简单任务由主线程直接处理；
+- 复杂、多步骤或明确要求工作流的任务，才按需使用 `using-superpowers`，且不再建立第二套顶层路由器；
 - OpenSpec artifacts 是规格事实来源；
 - 同一批 tasks 只有一个实现控制器；
 - subagent role 不固定模型，模型按当前工具、availability 和 backend 动态选择；
 - 共享工作树只允许一个主要写入所有者；
 - 未授权 commit 时不伪装使用原生 commit-centric SDD；
 - 完成声明必须有主线程读取的新鲜证据。
+
+## 轻量路由策略
+
+安装后的全局规则不会让每个编程请求都自动进入完整 Skill 链：
+
+- 简单、明确、低风险且可快速验证的任务不启动 Skill、subagent、OpenSpec 或完整计划；
+- 只有任务确实需要时才读取 `using-superpowers`；
+- OpenSpec bridge、subagent routing、delivery guardrails 和 no-commit adapter 都按真实动作触发，而不是会话启动时预加载；
+- 项目级规则和用户当前指令仍可为具体任务启用更严格的流程。
+
+`tests/validate_package.py` 会限制全局块大小，并阻止重新引入“所有编程任务必须先走工作流”的写法。
 
 ## 不会自动做什么
 
