@@ -21,7 +21,8 @@
 
 预期：
 
-- `using-superpowers` 仍负责入口判断；
+- 主线程直接读取相关文件并修改；
+- 不读取 `using-superpowers`；
 - 不建立 OpenSpec change；
 - 不派 subagent；
 - 不创建 commit；
@@ -38,7 +39,7 @@ using-superpowers
 → 选择执行器
 ```
 
-不得误调用 OpenSpec bridge。
+不调用 OpenSpec bridge。
 
 ## 4. OpenSpec 新功能
 
