@@ -2,5 +2,3 @@ interface:
   display_name: "Linear Project Governance"
   short_description: "Turn real project input into confirmed, traceable Linear records."
   default_prompt: "Use $linear-project-governance to inspect, reconcile, and govern this project without writing beyond the confirmed scope."
-policy:
-  allow_implicit_invocation: false
