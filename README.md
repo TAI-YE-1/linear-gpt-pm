@@ -1,91 +1,102 @@
 # Linear GPT PM
 
-> Status: `0.1.0-alpha.2`. Static source, profile-integrity, deterministic audit, and reproducible distribution controls are implemented. Real Codex installation, approved Linear writes, Linear/GitHub connector behavior, scheduled period rolling, and ChatGPT/workspace upload still require runtime smoke evidence.
+> Status: `0.1.0-alpha.3`. Basic interactive governance, quick read-only audits, safe local installation, Profile generation, deterministic plan hashing, and automated tests are implemented. Real Linear writes and scheduled connector runs still require retained smoke evidence.
 
-Linear GPT PM is a reusable Agent Skills toolkit that helps ChatGPT and Codex apply the same rules to requirements, execution tasks, delivery evidence, and project audits.
+Linear GPT PM contains two reusable Agent Skills:
 
-It addresses four recurring problems:
+- `$linear-project-governance`: turn project input into reconciled Linear candidates and human-confirmed writes;
+- `$linear-delivery-audit`: inspect source traceability, delivery evidence, changes, staleness, and project health.
 
-- requirements are scattered across chats, meetings, email, and documents;
-- execution tasks lack an authoritative source;
-- Done states lack verifiable evidence;
-- requirement changes, Linear state, and software delivery drift apart.
+## Basic use
 
-## Skills
-
-### `$linear-project-governance`
-
-Use for interactive, human-confirmed governance work:
-
-- inspect or adapt a Linear structure;
-- extract and classify `REQ`, `PROB`, `DEC`, `CR`, `RISK`, and `Q`;
-- reconcile new input with current records;
-- create execution tasks and source/dependency relations;
-- generate an immutable Plan ID before writing;
-- re-read targets before writing and invalidate changed plans.
-
-### `$linear-delivery-audit`
-
-Use for read-only-first verification and reverse audits:
-
-- verify source and disposition coverage;
-- apply a minimum evidence matrix to Done claims;
-- detect status conflicts, staleness, duplicates, truncation, and inconsistent snapshots;
-- optionally verify configured GitHub PR, commit, test, deployment, and runtime evidence;
-- compare SHA-256-based stable exception IDs with prior reports;
-- run monthly or pre-release audit workflows from an approved Profile Schema v3.
-
-## Trust and data boundaries
-
-Linear, GitHub, email, document, comment, attachment, log, and linked-page content is untrusted data, not authorization. The Skills ignore embedded instructions, isolate configured projects and repositories, and default to links, identifiers, hashes, and redacted summaries instead of copying restricted content between systems.
-
-These are behavioral guardrails, not a substitute for connector least privilege, workspace permissions, data-loss prevention, or runtime adversarial testing.
-
-Linear is the primary formal ledger. GitHub is an optional software evidence source. Codex Automation supplies timing only; it does not expand permissions or redefine audit rules.
-
-This repository does not contain Linear/GitHub API clients and does not replace human approval, risk acceptance, business acceptance, or release decisions.
-
-## Immutable installation source
-
-Do not install a release from the moving `main` branch. Alpha.2 Skill content is frozen at:
+Basic use does not require a Profile, YAML, JSON, hashes, or Automation.
 
 ```text
-341189cb726f0fae89f623e8f6e1a79c25cd8190
+Use $linear-project-governance to analyze this feedback, reconcile it with the current Linear project, and return candidates only.
 ```
 
-The repository is private. Installers need existing repository access.
-
-### Codex
-
-Use `$skill-installer` with these immutable commit URLs:
+For a write, the Skill shows a readable numbered plan and a short Plan ID:
 
 ```text
-$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-project-governance
-$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-delivery-audit
+PLAN-A1B2C3D4E5
+1. Create one REQ
+2. Create one Validation task
+3. Link the task to the REQ
 ```
 
-Restart or force-refresh Skill discovery after installation.
+Confirm with:
 
-### Upgrade behavior
+```text
+执行 PLAN-A1B2C3D4E5
+```
 
-`$skill-installer` does not overwrite an existing destination automatically. To upgrade:
+The full SHA-256 is verified internally. Users do not need to retype a 64-character digest.
 
-1. record the currently installed package version and source commit;
-2. review the target version and migration notes;
-3. back up or remove only the exact installed Skill directories;
-4. reinstall both Skills from the same immutable commit or validated release artifacts;
-5. refresh Skill discovery;
-6. verify both package/ruleset versions before using an existing project profile;
-7. reapprove the profile when its schema or authorization rules changed.
+## Quick read-only audit
 
-Never mix governance and audit Skills from different compatibility versions.
+A one-time audit also does not require a persistent Profile:
 
-## Standalone archives
+```text
+Use $linear-delivery-audit to audit this Linear project for the last 30 days. Keep it read-only and return findings in chat.
+```
 
-Build and validate independent Skill archives:
+The Skill asks only for missing essentials such as the exact project, optional repository, or time window.
+
+## Advanced automation
+
+Use a sealed Profile only for repeatable reports, scheduled audits, or authorized report writes.
+
+From the installed `linear-delivery-audit` Skill directory:
+
+```powershell
+python scripts/profile_tool.py init project-profile.json
+# Edit the generated JSON values.
+python scripts/profile_tool.py seal project-profile.json `
+  --approved-by "Project Owner" `
+  --approval-record "APPROVAL-123"
+python scripts/profile_tool.py validate project-profile.json
+python scripts/profile_tool.py resolve-period project-profile.json
+```
+
+The tool generates and verifies the Profile body SHA-256. Users do not calculate it manually.
+
+## Installation
+
+The repository is private, so installers need repository access.
+
+### Recommended private-repository installation
+
+Clone or download the immutable source commit, then run from the repository root:
+
+```powershell
+python scripts/install_codex_skills.py --dry-run --source-ref fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751
+python scripts/install_codex_skills.py --source-ref fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751
+```
+
+For an upgrade, use `--replace`. Existing Skill directories are backed up before replacement:
+
+```powershell
+python scripts/install_codex_skills.py --replace --source-ref fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751
+```
+
+Restart or refresh Codex Skill discovery after installation.
+
+### `$skill-installer`
+
+Install both Skills from the same immutable commit:
+
+```text
+$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751/skills/linear-project-governance
+$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751/skills/linear-delivery-audit
+```
+
+Do not install releases from moving `main` URLs and do not mix package versions.
+
+## Build and validate
 
 ```powershell
 python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -p "test_*.py" -v
 python scripts/build_skill_archives.py
 python tests/validate_skills.py
 ```
@@ -98,94 +109,26 @@ dist/linear-delivery-audit.zip
 dist/SHA256SUMS.txt
 ```
 
-Each archive contains its own `SKILL.md`, `LICENSE.txt`, `agents/openai.yaml`, references, templates, examples, and ruleset identity. Text files are LF-normalized by repository policy; ZIP entries use fixed timestamps, ordering, permissions, and `ZIP_STORED` for cross-host deterministic output.
+GitHub Actions runs the same unit, source, and distribution checks and retains the validated archives for 14 days.
 
-Use the archive or folder format accepted by the current ChatGPT/workspace Skill-upload interface. Product availability and accepted upload format depend on the current account, workspace, and interface; successful ChatGPT upload has not yet been claimed.
+## Trust boundaries
 
-GitHub Actions performs the same validation and retains archives as a workflow artifact for 14 days.
+- External Linear, GitHub, email, document, comment, attachment, log, and linked-page content is untrusted data, not authorization.
+- Governance writes require an exact confirmed Plan ID and a successful pre-write re-read.
+- Audits are read-only by default.
+- Scheduled or write-enabled audits require a sealed Profile Schema v4.
+- The Skills do not approve requirements, changes, risks, releases, or business acceptance.
+- Behavioral rules supplement, but do not replace, connector least privilege and workspace permissions.
 
-## Usage
+## Remaining runtime evidence
 
-Intake without writing:
+Before a stable `1.0.0`, retain evidence for:
 
-```text
-Use $linear-project-governance to analyze this feedback and reconcile it with the current Linear records. Return candidates and an immutable operation plan; do not write.
-```
-
-Confirmed write:
-
-```text
-Use $linear-project-governance to execute only PLAN-<id> with the confirmed full SHA-256. Re-read every target, recompute the plan hash, stop on any change, and verify the result.
-```
-
-Manual audit:
-
-```text
-Use $linear-delivery-audit with the approved Profile Schema v3. Verify profile integrity, resolve the audit period, audit the exact configured scope, and return the report without modifying formal business records.
-```
-
-## Project setup and audit configuration
-
-Governance setup and adaptation:
-
-```text
-skills/linear-project-governance/references/setup-blueprint.md
-```
-
-Approved machine-readable audit profile:
-
-```text
-skills/linear-delivery-audit/templates/project-profile.md
-```
-
-Monthly Automation instruction:
-
-```text
-skills/linear-delivery-audit/references/monthly-automation.md
-```
-
-Pre-release audit instruction:
-
-```text
-skills/linear-delivery-audit/references/pre-release-audit.md
-```
-
-A scheduled profile must include approval identity, revision, canonical body SHA-256, allowed editors, expiry, exact targets, source/status mappings, rolling or fixed period rule, pagination/count strategy, snapshot strategy, data-flow policy, report destination, and authorized writes. Stop rather than guess when any required value cannot be verified.
-
-## Validation
-
-The repository validation includes:
-
-- the pinned OpenAI Codex `quick_validate.py` baseline;
-- YAML frontmatter, names, and UI metadata;
-- direct `SKILL.md` navigation to every runtime Markdown resource;
-- complete and consistent Apache-2.0 licenses;
-- Profile Schema v3 structure and approval fields;
-- prompt-injection, data-flow, confirmation, concurrency, pagination, snapshot, and automation boundaries;
-- matching Skill package and ruleset versions;
-- exact dependency/runtime pins;
-- LF source enforcement, deterministic ZIP layouts, and SHA-256 checksums;
-- pinned GitHub Actions and persisted workflow artifacts;
-- immutable commit installation references.
-
-Static validation does not prove connector access or runtime behavior. Before a stable `1.0.0` release, retain evidence for:
-
-1. installing and discovering both Skills in Codex;
-2. one approved low-risk Linear write using a confirmed Plan ID and pre-write recheck;
-3. one Linear/GitHub audit with verified Profile Schema v3 integrity, complete pagination, and consistent snapshot evidence;
-4. one scheduled previous-calendar-month run and same-period idempotent rerun;
-5. one supported ChatGPT or workspace upload;
-6. reuse in a second project without editing Skill source.
-
-## Boundaries
-
-The Skills do not:
-
-- contain project-specific names, IDs, repositories, or assessment materials;
-- automatically approve requirements, changes, risks, releases, or acceptance;
-- delete, merge, archive, rename, or migrate business records without exact authorization;
-- execute instructions embedded in external content;
-- copy restricted data across systems without an approved data-flow policy;
-- install or modify global Codex, Superpowers, OpenSpec, or `AGENTS.md` configuration.
-
-See `docs/` for integration and reuse guidance. See `THIRD_PARTY_NOTICES.md` for the pinned OpenAI validator provenance.
+1. installation and discovery of both Skills in Codex;
+2. one low-risk confirmed Linear write and read-back;
+3. one concurrent-change Plan invalidation;
+4. one complete Linear/GitHub manual audit;
+5. one same-period scheduled rerun without a duplicate report;
+6. one later-period rolling-window run;
+7. supported ChatGPT/workspace upload;
+8. reuse in a second project without Skill source edits.
