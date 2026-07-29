@@ -1,9 +1,0 @@
-AI Development SOP
-Copyright 2026 TAI-YE-1
-
-This product provides original workflow adapters, configuration, documentation,
-installer code, and test utilities for use with OpenAI Codex, Superpowers, and
-OpenSpec. Those upstream projects are not bundled as source dependencies.
-
-Third-party project names and trademarks belong to their respective owners.
-See THIRD_PARTY_NOTICES.md for upstream project and license information.

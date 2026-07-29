@@ -1,6 +1,0 @@
-interface:
-  display_name: "Codex Subagent Routing"
-  short_description: "Route Codex subagents by role, model availability, backend and context."
-  default_prompt: "Use $codex-subagent-routing before spawning subagents."
-policy:
-  allow_implicit_invocation: false
