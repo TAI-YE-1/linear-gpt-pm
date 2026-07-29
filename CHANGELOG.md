@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.1 - 2026-07-29
+
+- Restored the complete Apache-2.0 license and added standalone `LICENSE.txt` files to both Skills.
+- Added Skill UI metadata under `agents/openai.yaml`.
+- Added an idempotent Linear setup blueprint and conflict-handling rules.
+- Added an explicit audit project profile for scheduled automation.
+- Defined deterministic coverage, observability and project-health calculations.
+- Strengthened source, reference, archive and checksum validation.
+- Added a lightweight GitHub Actions validation workflow.
+- Clarified that runtime installation, connector access and scheduled execution require separate smoke evidence.
+
 ## 1.0.0 - 2026-07-29
 
 - Rebuilt the repository as a reusable Agent Skills toolkit.
