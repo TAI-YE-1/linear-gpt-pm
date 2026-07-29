@@ -17,11 +17,13 @@ Linear GPT PM 是一套可复用的 Agent Skills 工具包，让 ChatGPT 与 Cod
    - 交互式治理与正式写入；
    - 需求提取、分类、对账、变更识别；
    - 创建事项、执行任务和原生关系；
+   - 按幂等初始化蓝图适配现有 Linear；
    - 正式写入前必须确认目标、范围和影响。
 
 2. `linear-delivery-audit`
    - 只读优先的交付核验与反向审查；
    - 检查孤立任务、无处置事项、Done 无证据、变更未传播、状态冲突和长期停滞；
+   - 使用确定性的覆盖率、可观测性和健康判定规则；
    - 软件项目可选核验 GitHub 分支、PR、提交与测试证据；
    - 可由 Codex Automation 周期调用。
 
@@ -35,11 +37,21 @@ Linear GPT PM 是一套可复用的 Agent Skills 工具包，让 ChatGPT 与 Cod
 
 ## 安装
 
+当前仓库为私有仓库，使用者必须已有仓库访问权限。若后续公开，下面的 GitHub 安装路径可以直接供更多用户使用。
+
 ### Codex
 
-使用 Codex 的 Skill 安装能力从本仓库安装以下目录，或将目录复制到当前 Codex 支持的 Skills 位置：
+在 Codex 中调用 Skill 安装能力，并安装以下两个 GitHub 目录：
 
 ```text
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/main/skills/linear-project-governance
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/main/skills/linear-delivery-audit
+```
+
+也可以明确指令：
+
+```text
+Use $skill-installer to install both Skills from TAI-YE-1/linear-gpt-pm:
 skills/linear-project-governance
 skills/linear-delivery-audit
 ```
@@ -48,13 +60,22 @@ skills/linear-delivery-audit
 
 ### ChatGPT
 
-在支持自定义 Skills 的账号或工作区中，可将单个 Skill 目录打包为 ZIP 后上传。可运行：
+在支持自定义 Skills 的账号或工作区中，可构建单个 Skill ZIP：
 
 ```powershell
 python scripts/build_skill_archives.py
+python tests/validate_skills.py
 ```
 
-生成文件位于 `dist/`。具体上传能力取决于当前产品、套餐和工作区权限。
+生成文件位于 `dist/`：
+
+```text
+dist/linear-project-governance.zip
+dist/linear-delivery-audit.zip
+dist/SHA256SUMS.txt
+```
+
+每个ZIP包含独立的`SKILL.md`、`LICENSE.txt`、`agents/openai.yaml`及全部运行时资源。具体上传能力取决于当前产品、套餐和工作区权限。
 
 ### Plugin
 
@@ -82,6 +103,20 @@ python scripts/build_skill_archives.py
 软件项目同时检查 GitHub 的 PR、提交和测试结果。
 ```
 
+治理结构初始化或适配时读取：
+
+```text
+skills/linear-project-governance/references/setup-blueprint.md
+```
+
+配置定时审查前，复制并完整填写：
+
+```text
+skills/linear-delivery-audit/templates/project-profile.md
+```
+
+然后使用 `automation/monthly-audit.md` 配置 Codex Automation。缺少精确项目、时区、报告位置或授权边界时，自动化必须停止而不是猜测。
+
 ## 项目边界
 
 本仓库不包含：
@@ -97,8 +132,20 @@ python scripts/build_skill_archives.py
 ## 验证
 
 ```powershell
-python tests/validate_skills.py
 python scripts/build_skill_archives.py
+python tests/validate_skills.py
 ```
+
+GitHub Actions会执行同一套轻量检查。校验覆盖：
+
+- Skill frontmatter、名称和必需资源；
+- Skill内部相对引用；
+- 完整许可证及ZIP内许可证一致性；
+- `agents/openai.yaml` UI元数据；
+- 治理写入与自动审查安全边界；
+- 自动化项目配置门禁；
+- ZIP布局与SHA-256校验。
+
+这些是静态与分发校验，不等同于真实安装、Linear/GitHub连接或Codex Automation运行验收。真实运行仍需单独保存烟雾测试证据。
 
 详细说明见 `docs/`，自动化模板见 `automation/`。
