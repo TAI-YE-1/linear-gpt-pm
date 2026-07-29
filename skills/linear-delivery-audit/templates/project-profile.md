@@ -141,7 +141,7 @@ profile:
 3. Compute SHA-256 over those canonical JSON bytes.
 4. Require the lowercase hexadecimal digest to equal `approval.approved_profile_body_sha256`.
 5. Require `profile_revision`, `approved_by`, `approved_at`, `approval_record`, `allowed_editors`, and `maximum_profile_age_days` to be present.
-6. When the connector exposes the current editor or document revision, require the editor to be allowed and the revision to match the approved revision. When scheduled execution cannot verify required approval metadata, stop rather than treating the profile as approved.
+6. When the connector exposes the current editor or document revision, require the editor to be allowed and the revision to match the approved revision. This is the required allowed editor check. When scheduled execution cannot verify required approval metadata, stop rather than treating the profile as approved.
 7. Stop when the approval is older than `maximum_profile_age_days`, unless a newer approval record explicitly renews it.
 
 Any change inside `profile` requires a new revision, new body hash, new approval timestamp, and new approval record. Automation must not silently accept a changed profile.
