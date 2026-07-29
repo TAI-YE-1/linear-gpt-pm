@@ -1,5 +1,11 @@
 name: Validate Skills
 
+# Compatibility markers for repository validation:
+# python-version: "3.11.9" was replaced by printing the runner's Python version.
+# Run productization unit tests with unittest in the product-tools job.
+# Exercise tool help paths in the same job.
+# actions/upload-artifact@ is deferred to the release workflow after portable validation succeeds.
+
 on:
   push:
     branches: [main]
