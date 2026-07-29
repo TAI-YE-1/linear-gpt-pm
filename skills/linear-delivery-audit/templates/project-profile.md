@@ -2,6 +2,14 @@
 
 Use a persistent Profile only for repeatable reports, scheduled audits, or audit writes. A quick read-only audit in the current conversation does not require one.
 
+## Prepare the Profile tool
+
+On Windows, or on any system without an IANA timezone database, install the bundled runtime dependency first:
+
+```powershell
+python -m pip install -r requirements-runtime.txt
+```
+
 ## Create a mostly prefilled Profile
 
 From the installed `linear-delivery-audit` Skill directory:
