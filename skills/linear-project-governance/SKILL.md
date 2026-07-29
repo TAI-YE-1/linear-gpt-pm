@@ -72,9 +72,11 @@ Make setup idempotent: reuse semantic matches, create only confirmed missing obj
 
 ## Source and relationship rules
 
-- Record the authoritative source item ID in the execution task's `Source` field.
+- Use the structured source heading recorded in the authoritative governance mapping; default to `Source` for a new setup.
+- Record the authoritative governance item ID in that structured source field.
 - Add a native `relatedTo` relation to the same governance item when the platform supports it.
-- Treat the source as verified only when the structured `Source` field and native relation agree, or when an explicit project profile defines an approved fallback for a platform limitation.
+- Treat the source as verified only when the structured source field and native relation agree.
+- When native relations are unavailable, use only the fallback recorded in the authoritative governance mapping and disclose the limitation in the audit profile.
 - Use `blocks` and `blockedBy` only for real dependencies.
 - Use `duplicateOf` for duplicates.
 - Use parent/child only when the platform and project boundary support it and the child can be independently closed.
