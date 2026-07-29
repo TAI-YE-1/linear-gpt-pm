@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2026-07-29
+
+- Aligned `agents/openai.yaml` with the current OpenAI Skill interface schema.
+- Removed the unsupported legacy `policy` block from both Skills.
+- Added validation for quoted interface values, Skill references and UI description length.
+
 ## 1.0.1 - 2026-07-29
 
 - Restored the complete Apache-2.0 license and added standalone `LICENSE.txt` files to both Skills.
