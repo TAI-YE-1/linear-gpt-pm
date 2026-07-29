@@ -50,7 +50,7 @@ This repository does not contain Linear/GitHub API clients and does not replace 
 Do not install a release from the moving `main` branch. Alpha.2 Skill content is frozen at:
 
 ```text
-1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8
+341189cb726f0fae89f623e8f6e1a79c25cd8190
 ```
 
 The repository is private. Installers need existing repository access.
@@ -60,8 +60,8 @@ The repository is private. Installers need existing repository access.
 Use `$skill-installer` with these immutable commit URLs:
 
 ```text
-$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-project-governance
-$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-delivery-audit
+$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-project-governance
+$skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-delivery-audit
 ```
 
 Restart or force-refresh Skill discovery after installation.
