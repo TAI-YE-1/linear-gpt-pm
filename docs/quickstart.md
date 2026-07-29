@@ -5,8 +5,8 @@
 Install both Skills from the same pinned commit:
 
 ```text
-https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-project-governance
-https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-delivery-audit
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-project-governance
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-delivery-audit
 ```
 
 Do not mix package versions. The installer does not overwrite existing Skill directories automatically; back up and replace only the exact Skill folders during an approved upgrade.
