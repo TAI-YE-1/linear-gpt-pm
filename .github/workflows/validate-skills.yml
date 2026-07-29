@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,7 +16,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -27,6 +28,18 @@ jobs:
 
       - name: Install validation dependencies
         run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
+
+      - name: Compile Python tools
+        run: python -m compileall -q scripts skills tests
+
+      - name: Run productization unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Exercise tool help paths
+        run: |
+          python scripts/install_codex_skills.py --help
+          python skills/linear-project-governance/scripts/plan_tool.py --help
+          python skills/linear-delivery-audit/scripts/profile_tool.py --help
 
       - name: Build reproducible standalone Skill archives
         run: python scripts/build_skill_archives.py
