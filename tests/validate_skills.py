@@ -104,20 +104,39 @@ def parse_frontmatter(path: Path, expected_name: str) -> None:
         fail(f"description length out of range: {path.relative_to(ROOT)}")
 
 
+def quoted_interface_value(text: str, key: str, path: Path) -> str:
+    match = re.search(rf'^  {re.escape(key)}: "([^"]+)"$', text, re.M)
+    if not match:
+        fail(f"agents/openai.yaml requires quoted interface.{key}: {path.relative_to(ROOT)}")
+    return match.group(1)
+
+
 def validate_agent_metadata(path: Path, skill_name: str) -> None:
     text = path.read_text(encoding="utf-8")
-    required = [
-        "interface:",
-        "display_name:",
-        "short_description:",
-        "default_prompt:",
-        f"${skill_name}",
-        "policy:",
-        "allow_implicit_invocation: false",
+    if "\t" in text:
+        fail(f"tabs are not allowed in agents/openai.yaml: {path.relative_to(ROOT)}")
+
+    top_level = [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip() and not line.startswith(" ")
     ]
-    for phrase in required:
-        if phrase not in text:
-            fail(f"agents/openai.yaml missing '{phrase}': {path.relative_to(ROOT)}")
+    if top_level != ["interface:"]:
+        fail(
+            f"unsupported top-level agents/openai.yaml keys in {path.relative_to(ROOT)}: "
+            f"{top_level}"
+        )
+
+    display_name = quoted_interface_value(text, "display_name", path)
+    short_description = quoted_interface_value(text, "short_description", path)
+    default_prompt = quoted_interface_value(text, "default_prompt", path)
+
+    if not display_name.strip():
+        fail(f"empty display_name: {path.relative_to(ROOT)}")
+    if not 25 <= len(short_description) <= 64:
+        fail(f"short_description must be 25-64 characters: {path.relative_to(ROOT)}")
+    if f"${skill_name}" not in default_prompt:
+        fail(f"default_prompt must mention ${skill_name}: {path.relative_to(ROOT)}")
 
 
 def validate_references(skill_dir: Path) -> None:
