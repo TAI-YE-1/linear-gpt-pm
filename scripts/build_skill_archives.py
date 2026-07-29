@@ -11,6 +11,7 @@ REQUIRED_IN_ARCHIVE = ["SKILL.md", "LICENSE.txt", "agents/openai.yaml"]
 FIXED_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 REJECTED_NAMES = {".DS_Store", "Thumbs.db"}
 REJECTED_SUFFIXES = {".tmp", ".pyc", ".swp", "~"}
+TEXT_SUFFIXES = {".md", ".txt", ".yaml", ".yml", ".py"}
 
 
 def sha256(path: Path) -> str:
@@ -33,16 +34,21 @@ def source_files(source: Path) -> list[Path]:
             raise SystemExit(f"temporary file is not allowed in a Skill package: {path}")
         if any(path.name.endswith(suffix) for suffix in REJECTED_SUFFIXES):
             raise SystemExit(f"temporary file is not allowed in a Skill package: {path}")
+        if path.suffix.lower() in TEXT_SUFFIXES:
+            data = path.read_bytes()
+            if b"\r\n" in data or b"\r" in data:
+                raise SystemExit(f"text file must use LF line endings: {path}")
         files.append(path)
     return files
 
 
 def build_archive(source: Path, archive: Path, skill: str) -> None:
-    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as handle:
+    # ZIP_STORED avoids zlib-version differences across supported build hosts.
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_STORED) as handle:
         for path in source_files(source):
             relative = path.relative_to(source).as_posix()
             info = zipfile.ZipInfo(f"{skill}/{relative}", FIXED_TIMESTAMP)
-            info.compress_type = zipfile.ZIP_DEFLATED
+            info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o100644 << 16
             info.create_system = 3
             handle.writestr(info, path.read_bytes())
@@ -99,7 +105,7 @@ def main() -> int:
         sums.append(f"{first_digest}  {archive.name}")
         print(f"[OK] {archive.relative_to(ROOT)}")
 
-    sums_path.write_text("\n".join(sums) + "\n", encoding="utf-8")
+    sums_path.write_text("\n".join(sums) + "\n", encoding="utf-8", newline="\n")
     print("[OK] dist/SHA256SUMS.txt")
     return 0
 
