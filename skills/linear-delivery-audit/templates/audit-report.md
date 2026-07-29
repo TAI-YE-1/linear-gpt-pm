@@ -3,27 +3,40 @@
 ## Identity
 
 - Project key:
-- Audit period:
-- Audit time and timezone:
-- Governance Skill version:
-- Audit Skill version:
+- Audit period rule:
+- Resolved audit start/end/timezone:
+- Audit generated at:
+- Governance Skill package version:
+- Audit Skill package version:
 - Governance ruleset version:
 - Audit ruleset version:
-- Project profile schema version:
+- Installation source commit/ref:
+- Governance archive SHA-256:
+- Audit archive SHA-256:
+- Profile schema version:
+- Profile ID:
+- Profile revision:
+- Approved profile body SHA-256:
+- Approval record:
 - Prior report used:
 
-## Scope and collection completeness
+## Scope and collection integrity
 
 - Structure mode:
 - Linear projects:
 - Repositories and candidate commits:
 - Included states and lookback windows:
+- Collection started at:
+- Collection finished at:
 - Expected item count or count source:
 - Fetched item count:
 - Pages/cursors consumed:
 - Comments/documents/relations accessible:
+- Objects changed during collection:
+- Snapshot recheck result:
 - Truncation or connector limits:
 - Collection completeness: `Confirmed / Incomplete / Unknown`
+- Snapshot consistency: `Confirmed / Incomplete / Unknown`
 - Missing capabilities:
 
 ## Data handling
@@ -34,8 +47,9 @@
 - Suspected prompt injection:
 - Prohibited data-flow attempts:
 
-## Health summary
+## Confidence and health summary
 
+- Audit confidence: `Complete / Incomplete / Unknown`
 - Overall health: `On track / At risk / Off track / Unknown`
 - Source coverage: `<numerator>/<denominator> (<percentage-or-N/A>)`
 - Source observability:
@@ -44,16 +58,19 @@
 - Done evidence coverage: `<numerator>/<denominator> (<percentage-or-N/A>)`
 - Done evidence observability:
 - Open Critical/High exceptions:
+- Confidence rationale:
 - Health rationale:
 
 ## New exceptions
 
 ### `<exception-id>` — `[Severity] Item ID — Short title`
 
+- Full exception SHA-256:
 - Rule ID and rule:
-- Evidence scope:
+- Normalized evidence scope:
 - Collection status:
 - Observed evidence:
+- Applied evidence-matrix row:
 - Inference:
 - Consequence:
 - Suggested human action:
