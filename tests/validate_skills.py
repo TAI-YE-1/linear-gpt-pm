@@ -36,6 +36,8 @@ SKILLS = {
             "templates/issues.md",
             "examples/examples.md",
             "must not independently approve",
+            "concurrent changes",
+            "untrusted data",
         ],
     },
     "linear-delivery-audit": {
@@ -63,6 +65,7 @@ SKILLS = {
             "examples/examples.md",
             "stable exception ID",
             "collection completeness",
+            "untrusted data",
         ],
     },
 }
@@ -277,7 +280,7 @@ def main() -> int:
             fail(f"audit standard missing deterministic boundary: {required}")
 
     report = (ROOT / "skills/linear-delivery-audit/templates/audit-report.md").read_text(encoding="utf-8")
-    for required in ("Collection completeness", "Ruleset", "Candidate-resolved", "Suspected prompt injection"):
+    for required in ("Collection completeness", "ruleset version", "Candidate-resolved", "Suspected prompt injection"):
         if required not in report:
             fail(f"audit report missing field: {required}")
 
