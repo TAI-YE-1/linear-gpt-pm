@@ -48,14 +48,16 @@ Use exactly one formal type for each governance item:
 
 Raw facts, observations and evidence remain in descriptions, comments or documents unless they require a decision, owner, treatment or acceptance.
 
-## Linear structure
+## Linear structure and setup
+
+For setup or structural adaptation, read `references/setup-blueprint.md` in addition to the governance standard.
 
 Prefer two projects when the organization benefits from separation:
 
 - `<Project>｜需求与决策`
 - `<Project>｜执行与交付`
 
-Do not force this structure onto an existing workspace without first inspecting the current structure and presenting an adaptation plan.
+Do not force this structure onto an existing workspace without first inspecting the current structure and presenting an adaptation diff. Setup must be idempotent: reuse semantic matches, create only confirmed missing objects, and report conflicts or partial completion precisely.
 
 ## Relationship rules
 
