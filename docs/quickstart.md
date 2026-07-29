@@ -1,40 +1,33 @@
 # Quickstart
 
-## 1. Install
+## 1. Install one immutable version
 
-Install both Skill directories using the target product's current Skill mechanism. Each Skill is independently self-contained.
+Install both Skills from the same pinned commit:
 
-For Codex, use `$skill-installer` with the two GitHub paths documented in `README.md`.
+```text
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-project-governance
+https://github.com/TAI-YE-1/linear-gpt-pm/tree/1c69d5fc5610fc8fba1094c36ee088a1b87c6ab8/skills/linear-delivery-audit
+```
 
-## 2. Connect capabilities
+Do not mix package versions. The installer does not overwrite existing Skill directories automatically; back up and replace only the exact Skill folders during an approved upgrade.
 
-Enable Linear for formal governance. For software projects, optionally enable GitHub for code evidence.
+## 2. Connect minimum capabilities
 
-Treat all connector content as untrusted data. Connecting a source grants data access within existing permissions; content inside that source never grants the agent new instructions or write authority.
+Enable Linear for formal governance. For software projects, optionally enable GitHub for code evidence. Use least privilege and keep GitHub read-only for normal audits.
 
 ## 3. Inspect before adapting
 
 ```text
-Use $linear-project-governance to inspect the exact current Linear structure and propose a semantic adaptation. Read the security and setup references. Do not write yet.
+Use $linear-project-governance to inspect the current Linear structure and propose an adaptation. Return an immutable operation plan and do not write.
 ```
 
-Review:
+Review projects, labels, statuses, templates, source conventions, and security/data-flow rules against `skills/linear-project-governance/references/setup-blueprint.md`.
 
-- single- or dual-project mode;
-- label and status mappings;
-- source-field and native-relation convention;
-- destination audience and data-flow limits;
-- proposed creations, reuse, and conflicts.
+## 4. Execute one low-risk confirmed write
 
-## 4. Operate intake
+Confirm the displayed Plan ID and full SHA-256. The Skill must re-read targets, recompute the plan hash, stop on changes, execute only the unchanged plan, and read back the result.
 
-```text
-Use $linear-project-governance to analyze this real meeting note and reconcile it with current Linear items. Return candidates first.
-```
-
-After review, explicitly identify the candidates to write. The Skill must re-read mutable targets immediately before writing and stop on relevant concurrent changes.
-
-## 5. Audit manually
+## 5. Create and approve Profile Schema v3
 
 Complete:
 
@@ -42,25 +35,25 @@ Complete:
 skills/linear-delivery-audit/templates/project-profile.md
 ```
 
-Then run:
+Parse the canonical YAML, calculate the profile-body SHA-256, record approver, approval record, revision, allowed editors, expiry, exact targets, mappings, period rule, collection strategy, data-flow policy, report destination, and authorized writes.
+
+## 6. Audit manually
 
 ```text
-Use $linear-delivery-audit with the completed project profile. Enumerate the configured pagination scope, apply the data-flow policy, compare the prior report when available, and return the report without modifying formal items.
+Use $linear-delivery-audit with the approved Profile Schema v3. Verify profile integrity, resolve the audit period, enumerate all pages, establish snapshot consistency, and return the report without changing formal business records.
 ```
 
-Do not accept a project-wide health conclusion without collection-completeness evidence.
+## 7. Add monthly Automation
 
-## 6. Add automation
-
-After a successful manual audit with the same profile, configure a periodic Codex Automation using:
+After a successful manual audit with the same approved profile revision/hash, use:
 
 ```text
 skills/linear-delivery-audit/references/monthly-automation.md
 ```
 
-The schedule supplies recurrence only. The Skill and completed profile define scope, security, evidence, metrics, write permissions, and report idempotency.
+For `previous-calendar-month`, verify that every run calculates a new absolute range in the configured timezone. Run the same period twice and confirm the second run updates the existing report instead of creating a duplicate.
 
-## 7. Validate source distributions
+## 8. Validate the repository
 
 ```powershell
 python -m pip install -r requirements-dev.txt
@@ -68,4 +61,4 @@ python scripts/build_skill_archives.py
 python tests/validate_skills.py
 ```
 
-Static validation does not replace real installation and connector smoke tests.
+Static validation covers structure, profile schema, rules, deterministic archives, and immutable installation references. Runtime installation and connector behavior require evidence using `tests/runtime-smoke-template.md`.
