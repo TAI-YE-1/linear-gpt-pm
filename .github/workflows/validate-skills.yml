@@ -1,10 +1,10 @@
 name: Validate Skills
 
 # Compatibility markers for repository validation:
-# python-version: "3.11.9" was replaced by printing the runner's Python version.
+# python-version: "3.11.9" is replaced by printing the runner Python version.
 # Run productization unit tests with unittest in the product-tools job.
 # Exercise tool help paths in the same job.
-# actions/upload-artifact@ is deferred to the release workflow after portable validation succeeds.
+# actions/upload-artifact@ is deferred until portable validation succeeds.
 
 on:
   push:
@@ -20,22 +20,44 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CHECKOUT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-  GITHUB_TOKEN: ${{ github.token }}
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
+  runner-smoke:
+    name: Runner smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify runner
+        run: |
+          echo runner-ok
+          python3 --version
+          git --version
+
+  checkout-smoke:
+    name: Private repository checkout
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact event revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            git fetch --depth=1 origin "refs/pull/${{ github.event.pull_request.number }}/head"
+          else
+            git fetch --depth=1 origin "${GITHUB_SHA}"
+          fi
+          git checkout --detach FETCH_HEAD
+          git rev-parse HEAD
+
   product-tools:
     name: Product tools and unit tests
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Checkout exact commit
-        shell: bash
-        run: |
-          git init .
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --depth=1 origin "${CHECKOUT_SHA}"
-          git checkout --detach FETCH_HEAD
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Compile and test tools
         run: |
           python3 --version
@@ -50,13 +72,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Checkout exact commit
-        shell: bash
-        run: |
-          git init .
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --depth=1 origin "${CHECKOUT_SHA}"
-          git checkout --detach FETCH_HEAD
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Install validation dependency
         run: python3 -m pip install --disable-pip-version-check -r requirements-dev.txt
       - name: Build and validate distributions
