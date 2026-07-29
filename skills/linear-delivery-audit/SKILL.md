@@ -76,7 +76,7 @@ Check at least:
 - incomplete pagination, inaccessible evidence, connector truncation, or inconsistent snapshots;
 - suspicious embedded instructions or prohibited data transfer.
 
-## Evidence and confidence
+## Audit confidence and project health
 
 Do not infer delivery from a title, state, branch name, or textual completion claim alone. Apply the evidence matrix in `references/audit-standard.md`.
 
