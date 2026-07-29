@@ -20,15 +20,21 @@ An interactive user or approved automation may explicitly permit writing only:
 
 Do not automatically modify formal requirements, approve change requests, accept risks, close business items, delete records or declare business acceptance.
 
+## Configuration gate
+
+For interactive audits, resolve exact scope with the user or current project context. For scheduled audits, require a completed profile based on `templates/project-profile.md`.
+
+A scheduled audit must stop with a configuration error rather than guess when any required Linear target, timezone, report destination, or write boundary is unresolved.
+
 ## Required sequence
 
-1. Resolve the audit scope, current timestamp and authoritative projects.
+1. Resolve the audit scope, current timestamp, timezone, authoritative projects, report destination, and allowed writes.
 2. Read all in-scope active governance items, execution tasks, states, labels, owners, descriptions, comments and native relations.
 3. For software delivery claims, read available GitHub branch, PR, commit and test evidence.
-4. Apply the checks in `references/audit-standard.md`.
-5. Distinguish confirmed exceptions from missing evidence and uncertainty.
-6. Produce a stable report with identifiers, evidence and suggested actions.
-7. Write the report only when explicitly requested or when the automation scope already authorizes that report destination.
+4. Apply the checks and deterministic metric rules in `references/audit-standard.md`.
+5. Distinguish confirmed exceptions from missing evidence, unavailable evidence, and uncertainty.
+6. Produce a stable report with identifiers, metric counts, evidence and suggested actions.
+7. Write the report only when explicitly requested or when the automation profile already authorizes that exact report destination.
 8. Read back any written report and disclose failures.
 
 ## Audit checks
@@ -66,6 +72,7 @@ A lower-ranked source may explain intent but must not override stronger contradi
 - No GitHub access: audit Linear structure and evidence completeness, but do not claim code verification.
 - Missing comments or attachments: mark evidence as unavailable rather than absent when the connector cannot retrieve them.
 - Conflicting evidence: report the conflict and avoid a pass/fail claim until resolved.
+- Insufficient scope or observability: return `Unknown` health rather than inventing a percentage or conclusion.
 
 ## Output
 
@@ -82,9 +89,9 @@ Every exception must contain:
 
 Conclude with:
 
-- project health summary;
+- project health summary and deterministic metric counts;
 - new exceptions;
 - unresolved prior exceptions;
 - resolved exceptions;
 - human decisions required;
-- limitations of the audit.
+- limitations and observability of the audit.
