@@ -1,167 +1,72 @@
 # Audit Project Profile
 
-Use one completed profile per governed project. Store it at an exact immutable or revisioned location accessible to the audit runtime. Do not schedule an audit with placeholders.
+Use this only for repeatable manual reports, scheduled audits, or audit writes. A quick read-only audit in the current conversation does not require a persistent Profile.
 
-## Canonical machine-readable profile
+## Fast path
 
-Complete this YAML block. Keep the `approval` envelope separate from the `profile` body so the body can be hashed deterministically.
+Run from the installed `linear-delivery-audit` Skill directory:
 
-```yaml
-profile_schema_version: 3
-profile_id: "<stable-profile-id>"
-profile_revision: 1
-
-approval:
-  approved_by: "<person-or-authorized-role>"
-  approved_at: "<RFC3339 timestamp>"
-  approval_record: "<stable approval comment/document/issue ID>"
-  allowed_editors:
-    - "<person-or-authorized-role>"
-  maximum_profile_age_days: 90
-  approved_profile_body_sha256: "<64 lowercase hexadecimal characters>"
-
-profile:
-  identity:
-    project_key: "<stable-short-key>"
-    project_name: "<exact-project-name>"
-    timezone: "<IANA-timezone>"
-    accountable_owner: "<person-or-role>"
-
-  linear_structure:
-    team_or_workspace: "<exact-team-or-workspace>"
-    structure_mode: "<single-project-or-dual-project>"
-    governance_project: "<exact-name-or-id>"
-    delivery_project: "<exact-name-or-id>"
-    governance_type_label_mapping:
-      REQ: "<exact-label>"
-      PROB: "<exact-label>"
-      DEC: "<exact-label>"
-      CR: "<exact-label>"
-      RISK: "<exact-label>"
-      Q: "<exact-label>"
-    execution_type_label_mapping:
-      Analysis: "<exact-label>"
-      Implementation: "<exact-label>"
-      Validation: "<exact-label>"
-      Collaboration: "<exact-label>"
-    status_mapping:
-      Backlog: "<exact-status>"
-      Todo: "<exact-status>"
-      InProgress: "<exact-status>"
-      InReview: "<exact-status>"
-      Done: "<exact-status>"
-      Canceled: "<exact-status>"
-      Duplicate: "<exact-status>"
-    source_field_heading: "<exact-structured-heading>"
-    native_source_relation: "<relatedTo-or-approved-fallback>"
-    authoritative_governance_document: "<exact-document-location>"
-
-  report_and_write_authority:
-    audit_report_destination: "<exact-document-project-issue-or-status-target>"
-    destination_audience: "<exact-audience>"
-    destination_data_classification: "<classification>"
-    authorized_audit_writes:
-      - "<exact-report-document-comment-or-status-update>"
-    prohibited_writes:
-      - formal-requirement-change
-      - change-approval
-      - risk-acceptance
-      - business-closure
-      - destructive-cleanup
-      - ci-rerun
-      - merge
-      - deployment
-
-  data_flow_policy:
-    source_classifications:
-      Linear: "<classification>"
-      GitHub: "<classification-or-not-applicable>"
-      Documents: "<classification>"
-      Logs: "<classification-or-not-applicable>"
-    allowed_source_to_destination_flows:
-      - "<exact rule>"
-    copy_policy: "<link-only-summary-redacted-excerpt-or-prohibited>"
-    required_redactions:
-      - secrets
-      - personal-data
-      - source-code
-      - private-logs
-      - security-details
-    maximum_quoted_characters: 500
-    allowed_linked_domains_or_evidence_systems:
-      - "<exact-domain-or-system>"
-
-  software_evidence:
-    repositories:
-      - "<owner/repository-or-none>"
-    default_branches:
-      "<owner/repository>": "<branch>"
-    candidate_scope: "<pull-request-release-commit-rule-or-none>"
-    deployment_or_runtime_evidence_systems:
-      - "<exact-source-or-none>"
-
-  audit_period:
-    rule: "<previous-calendar-month-fixed-range-or-release-candidate-scope>"
-    fixed_start: "<RFC3339-or-null>"
-    fixed_end: "<RFC3339-or-null>"
-    report_period_naming: "<audited-period>"
-    active_item_scope: "<all-active-or-explicit-filter>"
-    done_evidence_lookback_days: 31
-    changed_item_lookback_days: 31
-    historical_baseline_treatment: "<rule>"
-
-  collection:
-    expected_item_count_source: "<exact-method>"
-    pagination_or_cursor_strategy: "<exact-method>"
-    required_comment_document_relation_access: "<requirements>"
-    maximum_project_wide_collection_gap: 0
-    consistent_snapshot_strategy: "<updated-at-recheck-or-connector-snapshot>"
-
-  audit_policy:
-    stale_in_progress_days: 14
-    approved_operational_maintenance_marker: "<label-or-rule>"
-    minimum_observability:
-      source: 1.0
-      disposition: 1.0
-      done_evidence: 0.95
-    evidence_access_limitations: "<known-limitations>"
-    prompt_injection_reporting_destination: "<report-section-or-security-channel>"
-
-  prior_report_comparison:
-    lookup_location: "<exact-location>"
-    title_pattern: "Governance Audit | <project-key> | YYYY-MM"
-    existing_period_behavior: "update-existing-report"
-    ruleset_compatibility: "<same-ruleset-or-explicit-migration>"
+```powershell
+python scripts/profile_tool.py init project-profile.json
 ```
 
-## Integrity algorithm
+Edit the generated JSON values, then seal it:
 
-1. Parse the YAML block.
-2. Serialize only the value of the top-level `profile` mapping as canonical JSON using UTF-8, lexicographically sorted object keys, no insignificant whitespace, JSON booleans/null, and arrays in declared order.
-3. Compute SHA-256 over those canonical JSON bytes.
-4. Require the lowercase hexadecimal digest to equal `approval.approved_profile_body_sha256`.
-5. Require `profile_revision`, `approved_by`, `approved_at`, `approval_record`, `allowed_editors`, and `maximum_profile_age_days` to be present.
-6. When the connector exposes the current editor or document revision, require the editor to be allowed and the revision to match the approved revision. This is the required allowed editor check. When scheduled execution cannot verify required approval metadata, stop rather than treating the profile as approved.
-7. Stop when the approval is older than `maximum_profile_age_days`, unless a newer approval record explicitly renews it.
+```powershell
+python scripts/profile_tool.py seal project-profile.json `
+  --approved-by "<person-or-authorized-role>" `
+  --approval-record "<stable-approval-record-id>"
+```
 
-Any change inside `profile` requires a new revision, new body hash, new approval timestamp, and new approval record. Automation must not silently accept a changed profile.
+Validate and resolve the current period:
 
-## Period resolution
+```powershell
+python scripts/profile_tool.py validate project-profile.json
+python scripts/profile_tool.py resolve-period project-profile.json
+```
 
-- `previous-calendar-month`: calculate the first and last instant of the previous calendar month in `profile.identity.timezone` on every run.
-- `fixed-range`: require `fixed_start` and `fixed_end` and never move them automatically.
-- `release-candidate-scope`: resolve the exact candidate from `software_evidence.candidate_scope`; do not infer a release candidate.
+The tool calculates the canonical SHA-256. Users should not calculate or paste hashes manually.
 
-Write the resolved absolute start, end, timezone, and rule into every report.
+## Profile Schema v4
 
-## Configuration gate
+The generated JSON document contains:
 
-Stop with a configuration error when:
+- `profile_schema_version`, stable Profile ID, and revision;
+- approval identity, timestamp, record, allowed editors, expiry, and generated body SHA-256;
+- project identity and timezone;
+- single/dual Linear project targets;
+- governance, execution, status, source-field, and relation mappings;
+- exact report destination and allowed writes;
+- data classifications, redactions, and source-to-destination flow rules;
+- optional repositories and candidate scope;
+- rolling, fixed, or release-candidate audit period rules;
+- pagination, expected counts, evidence access, and snapshot strategy;
+- evidence and observability policy;
+- prior-report lookup and idempotent report behavior.
 
-- YAML parsing fails or placeholders remain;
-- profile integrity, approval, editor, revision, or age cannot be verified as required;
-- any Linear target, mapping, timezone, period rule, collection rule, report destination, data-flow policy, or authorization boundary is unresolved;
-- `single-project` mode does not map both semantic roles to the intended project;
-- a weaker observability threshold than the bundled minimum is supplied.
+## Integrity rules
 
-Do not broaden scope, infer mappings, downgrade classification, or copy content by guessing.
+`profile_tool.py seal` serializes only the top-level `profile` body as canonical JSON using UTF-8, sorted object keys, no insignificant whitespace, and arrays in declared order. It computes SHA-256 and writes the digest into the separate approval envelope.
+
+Any change to the `profile` body requires:
+
+1. a higher `profile_revision`;
+2. a new approval record and timestamp;
+3. a newly generated body SHA-256;
+4. revalidation before use.
+
+Scheduled execution must stop when Profile parsing, hash, approval, expiry, required metadata, scope, destination, or authorization cannot be verified.
+
+## Period rules
+
+- `previous-calendar-month`: calculate the previous calendar month on every run in the configured IANA timezone;
+- `fixed-range`: require exact RFC3339 start and end timestamps;
+- `release-candidate-scope`: require an exact candidate in the software evidence section.
+
+Use an inclusive start and exclusive end. Write the resolved absolute range and timezone into every report.
+
+## Usage boundary
+
+- Quick read-only audit: current conversation scope is enough; no Profile required.
+- Repeatable manual audit: validated Profile recommended.
+- Scheduled or write-enabled audit: sealed and approved Profile required.
