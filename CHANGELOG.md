@@ -1,29 +1,36 @@
 # Changelog
 
+## 0.1.0-alpha.3 - 2026-07-29
+
+- Added a safe cross-platform local Codex installer with dry-run, backups, atomic replacement, and installation manifests.
+- Added deterministic `plan_tool.py`; users confirm a short readable Plan ID while the full digest is verified internally.
+- Added standard-library `profile_tool.py` to create, seal, validate, hash, and resolve Profile periods without manual SHA calculations.
+- Replaced the advanced Profile workflow with JSON Profile Schema v4.
+- Split usage into basic governance, quick read-only audit, repeatable manual audit, and advanced scheduled audit paths.
+- Made persistent Profiles optional for one-time read-only audits.
+- Added unit tests for installation, Plan hashing, Profile hashing, validation, expiry, and rolling month resolution.
+- Extended CI to compile tools, run unit tests, exercise CLI help paths, build archives, and run source/distribution validation.
+
 ## 0.1.0-alpha.2 - 2026-07-29
 
-- Added a machine-readable project profile schema v3 with approval identity, revision, canonical body SHA-256, allowed editors, and expiry checks.
+- Added machine-readable Profile Schema v3 with approval identity, revision, canonical body SHA-256, allowed editors, and expiry checks.
 - Added rolling `previous-calendar-month`, fixed-range, and release-candidate audit period rules.
 - Changed health evaluation to confidence-first: incomplete configuration, collection, or snapshots force project-wide health to `Unknown`.
-- Added a minimum evidence matrix for code, documentation, configuration, deployment, research, operational, and validation deliverables.
-- Added canonical evidence-scope normalization and SHA-256-based stable exception IDs.
+- Added a minimum evidence matrix and SHA-256-based stable exception IDs.
 - Added collection start/finish timestamps and snapshot-consistency rechecks.
-- Added immutable governance operation plans with Plan IDs and confirmation hashes.
-- Enforced LF source files, exact PyYAML pinning, Python 3.11.9 CI, ZIP_STORED archives, and workflow concurrency.
-- Changed installation guidance from moving `main` paths to an immutable commit reference and documented clean upgrades.
+- Added immutable governance operation plans.
+- Enforced LF sources, exact validation dependency pinning, fixed Python CI, deterministic archives, and workflow concurrency.
 
 ## 0.1.0-alpha.1 - 2026-07-29
 
 - Rebuilt the repository as two self-contained Agent Skills.
 - Added human-confirmed Linear governance and read-only-first delivery audit workflows.
-- Added deterministic setup, classification, source, evidence, metric, health, and exception-identity rules.
-- Added prompt-injection resistance, project isolation, cross-system data-flow controls, pre-write concurrency checks, and idempotent creation rules.
-- Added single/dual-project mappings, pagination and collection-completeness gates, audit windows, and prior-report comparison.
+- Added deterministic setup, classification, source, evidence, metric, health, and exception rules.
+- Added prompt-injection resistance, project isolation, cross-system data-flow controls, concurrency checks, and idempotent creation rules.
 - Bundled monthly and pre-release automation instructions inside the audit Skill.
-- Added complete standalone licenses, ruleset identity, reproducible ZIP packaging, SHA-256 checksums, and persisted CI artifacts.
-- Added the OpenAI Codex Skill `quick_validate.py` baseline pinned to commit `fe01054a28fa4bd04716d9ceadb410f2443a50ce` plus repository-specific validation.
+- Added standalone licenses, ruleset identity, reproducible ZIP packaging, checksums, CI artifacts, and a pinned OpenAI validation baseline.
 - Removed the previous Codex × Superpowers × OpenSpec package from the active tree.
 
 ## Stability note
 
-This remains an alpha release. Static source and distribution validation are implemented. Stable `1.0.0` requires retained evidence for real Codex installation, approved Linear writes, Linear/GitHub connector behavior, scheduled period rolling and idempotent reports, supported ChatGPT/workspace upload, and reuse in a second project.
+This remains an alpha release. Stable `1.0.0` requires retained evidence for real Codex installation, approved Linear writes, connector behavior, scheduled rolling/idempotent reports, supported ChatGPT/workspace upload, and reuse in a second project.
