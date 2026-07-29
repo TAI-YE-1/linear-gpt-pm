@@ -1,0 +1,6 @@
+interface:
+  display_name: "Linear Delivery Audit"
+  short_description: "Verify delivery evidence and audit Linear project health."
+  default_prompt: "Use $linear-delivery-audit to run a read-only evidence audit and report exact exceptions without changing formal business records."
+policy:
+  allow_implicit_invocation: false
