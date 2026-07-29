@@ -1,64 +1,66 @@
 # Quickstart
 
-## 1. Install one immutable version
+## Path A — Basic use
 
-Install both Skills from the same pinned commit:
-
-```text
-https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-project-governance
-https://github.com/TAI-YE-1/linear-gpt-pm/tree/341189cb726f0fae89f623e8f6e1a79c25cd8190/skills/linear-delivery-audit
-```
-
-Do not mix package versions. The installer does not overwrite existing Skill directories automatically; back up and replace only the exact Skill folders during an approved upgrade.
-
-## 2. Connect minimum capabilities
-
-Enable Linear for formal governance. For software projects, optionally enable GitHub for code evidence. Use least privilege and keep GitHub read-only for normal audits.
-
-## 3. Inspect before adapting
+Install both Skills from the same version, refresh Codex, and start with natural language:
 
 ```text
-Use $linear-project-governance to inspect the current Linear structure and propose an adaptation. Return an immutable operation plan and do not write.
+Use $linear-project-governance to analyze this meeting note, reconcile it with current Linear records, and return candidates only.
 ```
 
-Review projects, labels, statuses, templates, source conventions, and security/data-flow rules against `skills/linear-project-governance/references/setup-blueprint.md`.
+No Profile or hash setup is required.
 
-## 4. Execute one low-risk confirmed write
-
-Confirm the displayed Plan ID and full SHA-256. The Skill must re-read targets, recompute the plan hash, stop on changes, execute only the unchanged plan, and read back the result.
-
-## 5. Create and approve Profile Schema v3
-
-Complete:
+When a write is proposed, review the numbered operations and confirm only the short Plan ID:
 
 ```text
-skills/linear-delivery-audit/templates/project-profile.md
+执行 PLAN-A1B2C3D4E5
 ```
 
-Parse the canonical YAML, calculate the profile-body SHA-256, record approver, approval record, revision, allowed editors, expiry, exact targets, mappings, period rule, collection strategy, data-flow policy, report destination, and authorized writes.
+The Skill verifies the full digest and current target versions internally.
 
-## 6. Audit manually
+## Path B — Quick manual audit
 
 ```text
-Use $linear-delivery-audit with the approved Profile Schema v3. Verify profile integrity, resolve the audit period, enumerate all pages, establish snapshot consistency, and return the report without changing formal business records.
+Use $linear-delivery-audit to audit this Linear project for the last 30 days. Keep it read-only and return the findings in chat.
 ```
 
-## 7. Add monthly Automation
+Provide the exact project, optional repository, and time window if they are not already clear. A persistent Profile is not required.
 
-After a successful manual audit with the same approved profile revision/hash, use:
+## Path C — Advanced automation
 
-```text
-skills/linear-delivery-audit/references/monthly-automation.md
+Create and seal Profile Schema v4 only after one successful manual audit:
+
+```powershell
+cd <installed-linear-delivery-audit-skill>
+python scripts/profile_tool.py init project-profile.json
+# Edit project-profile.json.
+python scripts/profile_tool.py seal project-profile.json `
+  --approved-by "Project Owner" `
+  --approval-record "APPROVAL-123"
+python scripts/profile_tool.py validate project-profile.json
+python scripts/profile_tool.py resolve-period project-profile.json
 ```
 
-For `previous-calendar-month`, verify that every run calculates a new absolute range in the configured timezone. Run the same period twice and confirm the second run updates the existing report instead of creating a duplicate.
+Then use `skills/linear-delivery-audit/references/monthly-automation.md` to configure recurrence. Verify one same-period rerun and one later-period rolling-window run.
 
-## 8. Validate the repository
+## Safe installation from a private checkout
+
+From repository commit `fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751`:
+
+```powershell
+python scripts/install_codex_skills.py --dry-run --source-ref fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751
+python scripts/install_codex_skills.py --source-ref fc1fc6aa75b5d9ebec4613f37c21a868b1e9f751
+```
+
+Use `--replace` for a reviewed upgrade; the installer backs up existing Skill directories first.
+
+## Repository validation
 
 ```powershell
 python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -p "test_*.py" -v
 python scripts/build_skill_archives.py
 python tests/validate_skills.py
 ```
 
-Static validation covers structure, profile schema, rules, deterministic archives, and immutable installation references. Runtime installation and connector behavior require evidence using `tests/runtime-smoke-template.md`.
+Static and unit validation does not replace real connector smoke evidence. Record runtime results in `tests/runtime-smoke-template.md`.
