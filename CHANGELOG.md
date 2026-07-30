@@ -6,9 +6,10 @@
 - Added public badges, quick navigation, 60-second usage examples, maturity boundaries, and adoption guidance.
 - Reworked the quickstart into a five-minute install, first governance run, first read-only audit, and optional scheduled-audit path.
 - Expanded the integration guide with Linear, GitHub, Codex, permission, degraded-operation, and data-flow guidance.
-- Added a public, redacted Infinite Canvas case study showing real Linear projects, governance items, delivery tasks, risks, and GitHub evidence semantics.
+- Added a generic project-governance example using placeholders instead of real project names, issue identifiers, repositories, or PR numbers.
 - Reworked the reuse guide into phased adoption steps and a project migration checklist.
 - Expanded the contribution guide for bug reports, connector differences, test scenarios, public examples, and security boundaries.
+- Removed project-specific names and identifiers from public documentation.
 
 These documentation changes do not change the frozen `0.1.0-alpha.3` Skill package behavior.
 
