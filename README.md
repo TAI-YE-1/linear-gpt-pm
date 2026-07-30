@@ -20,6 +20,7 @@
 ## 快速导航
 
 - [五分钟快速开始](docs/quickstart.md)
+- [ChatGPT 网页端上传与验证](docs/chatgpt-web.md)
 - [Linear / GitHub / Codex 集成说明](docs/integrations.md)
 - [通用项目治理示例模板](docs/examples/project-governance-example.md)
 - [迁移到其他项目](docs/reuse-guide.md)
@@ -79,7 +80,7 @@ AI 负责整理、对账和检查，但不替代负责人承担决策责任。
 ### 整理真实反馈
 
 ```text
-使用 $linear-project-governance 分析下面的用户反馈。
+使用 linear-project-governance 分析下面的用户反馈。
 请先读取 <Linear团队或项目> 并对账，只返回候选事项、重复项和建议关系，不要写入。
 
 <粘贴真实反馈、会议记录或项目材料>
@@ -105,7 +106,7 @@ Skill 会在写入前重新读取目标，并在写入后回读结果。
 ### 运行一次只读审查
 
 ```text
-使用 $linear-delivery-audit 审查 <Linear项目名称> 最近 30 天的情况。
+使用 linear-delivery-audit 审查 <Linear项目名称> 最近 30 天的情况。
 GitHub 仓库是 <owner/repo>。
 保持只读，返回问题、证据、影响和建议动作。
 ```
@@ -149,7 +150,22 @@ GitHub 中的 `<PR编号>`、`<Commit SHA>`、测试和运行记录作为交付�
 
 ## 安装
 
-### 使用 Skill Installer
+### ChatGPT 网页端
+
+在 ChatGPT 的 Skills 页面分别上传：
+
+```text
+linear-project-governance.zip
+linear-delivery-audit.zip
+```
+
+上传后出现在 Installed 列表，说明 ZIP 已通过基础扫描并被识别。但这不保证普通聊天中的 `read_resource` 可以浏览 Skill 源码，也不保证存在可猜测的 `skills://plugins/...` URI。
+
+正确验证方法是连接 Linear 后运行一次真实的只读对账和一次只读审查，检查输出是否遵循分类、Plan ID、写前重读、默认只读和证据边界等规则。
+
+详细说明见：[ChatGPT 网页端上传与验证](docs/chatgpt-web.md)。
+
+### Codex Skill Installer
 
 从同一固定提交安装：
 
@@ -158,7 +174,7 @@ $skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/92561c1a
 $skill-installer install https://github.com/TAI-YE-1/linear-gpt-pm/tree/92561c1aa36c18ede37474185170ec3faa7d8c33/skills/linear-delivery-audit
 ```
 
-### 使用仓库安装脚本
+### Codex 本地安装脚本
 
 ```powershell
 git clone https://github.com/TAI-YE-1/linear-gpt-pm.git
@@ -170,7 +186,19 @@ python scripts/install_codex_skills.py --source-ref 92561c1aa36c18ede37474185170
 
 升级时使用 `--replace`，旧 Skill 目录会先备份。
 
-详细步骤见：[快速开始](docs/quickstart.md)。
+## ChatGPT 网页端常见误判
+
+以下现象不能单独证明 Skill 安装失败：
+
+- `read_resource` 无法读取猜测的 Skill URI；
+- 公开 Plugin 目录按技能名称搜索不到条目；
+- `Linear.list_agent_skills` 返回空数组；
+- 聊天无法直接展示完整 `SKILL.md`；
+- 网页端上传后，本地 Codex 没有自动同步。
+
+原因是 ChatGPT Skills 安装记录、Plugin 目录、会话资源读取器、Linear Agent Skills 注册表和 Codex 本地 Skills 目录是不同系统。
+
+需要查看完整源码时，请使用 Skills 编辑器、下载功能、本仓库或本地解压后的 ZIP，而不是把通用资源读取器当成个人 Skill 文件浏览器。
 
 ## 三种使用深度
 
@@ -221,6 +249,7 @@ skills/linear-delivery-audit/references/monthly-automation.md
 - 两个可安装 Skills；
 - 基础需求治理和只读交付审查；
 - 单项目和双项目治理模板；
+- ChatGPT 网页端上传与验证说明；
 - 安装、Plan、Profile、测试和打包工具；
 - 公开快速开始、集成、复用和占位符案例文档。
 
@@ -244,6 +273,7 @@ scripts/
   build_skill_archives.py           # 可复现打包
 docs/
   quickstart.md                     # 快速开始
+  chatgpt-web.md                    # ChatGPT 网页端上传与验证
   integrations.md                   # Linear / GitHub / Codex 集成
   reuse-guide.md                    # 迁移到其他项目
   capability-boundaries.md          # 人与 AI 的职责边界
