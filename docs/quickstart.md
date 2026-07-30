@@ -7,6 +7,8 @@ Linear GPT PM 包含两个可以配合使用、也可以单独调用的 Agent Sk
 
 基础使用不需要配置文件，也不需要手工计算哈希。
 
+本文中的 `<项目名称>`、`<Linear团队>`、`<owner/repo>`、`<事项编号>` 等均为占位符，请替换为自己的项目数据。
+
 ## 你需要什么
 
 至少需要：
@@ -49,7 +51,7 @@ python scripts/install_codex_skills.py --replace --source-ref 92561c1aa36c18ede3
 
 ```text
 使用 $linear-project-governance 分析下面的用户反馈。
-请先读取当前 Linear 项目并对账，只返回候选事项、重复项和建议关系，不要写入。
+请先读取 <Linear团队或项目> 并对账，只返回候选事项、重复项和建议关系，不要写入。
 
 <粘贴真实反馈、会议记录或项目材料>
 ```
@@ -82,9 +84,9 @@ PLAN-A1B2C3D4E5
 ## 第二次使用：运行一次只读审查
 
 ```text
-使用 $linear-delivery-audit 审查这个 Linear 项目最近 30 天的情况。
+使用 $linear-delivery-audit 审查 <Linear项目名称> 最近 30 天的情况。
 保持只读，返回问题、证据、影响和建议动作。
-GitHub 仓库为：<可选仓库>
+GitHub 仓库为：<owner/repo>
 ```
 
 一次性审查不需要 Profile，只需要明确：
@@ -109,7 +111,7 @@ GitHub 仓库为：<可选仓库>
 长期或复杂项目建议使用双项目模式：
 
 ```text
-项目 A：需求与决策
+<项目名称>｜需求与决策
   ├─ REQ 需求
   ├─ PROB 问题
   ├─ DEC 决策
@@ -117,7 +119,7 @@ GitHub 仓库为：<可选仓库>
   ├─ RISK 风险
   └─ Q 待确认问题
 
-项目 B：执行与交付
+<项目名称>｜执行与交付
   ├─ 分析任务
   ├─ 实施任务
   ├─ 验证任务
@@ -135,20 +137,20 @@ GitHub 仓库为：<可选仓库>
 ```powershell
 python -m pip install -r requirements-runtime.txt
 python scripts/profile_tool.py init project-profile.json `
-  --project-key "demo" `
-  --project-name "Demo Project" `
-  --timezone "Asia/Shanghai" `
-  --owner "Project Owner" `
-  --team "Demo Team" `
-  --project "Demo Delivery"
+  --project-key "<项目短标识>" `
+  --project-name "<项目名称>" `
+  --timezone "<IANA时区>" `
+  --owner "<负责人>" `
+  --team "<Linear团队>" `
+  --project "<执行项目名称>"
 ```
 
 检查生成的配置后封存并验证：
 
 ```powershell
 python scripts/profile_tool.py seal project-profile.json `
-  --approved-by "Project Owner" `
-  --approval-record "APPROVAL-123"
+  --approved-by "<批准人>" `
+  --approval-record "<批准记录编号>"
 python scripts/profile_tool.py validate project-profile.json
 python scripts/profile_tool.py resolve-period project-profile.json
 ```
@@ -182,6 +184,6 @@ dist/SHA256SUMS.txt
 ## 下一步
 
 - [查看 Linear / GitHub / Codex 集成方式](integrations.md)
-- [查看 Infinite Canvas 真实应用案例](examples/infinite-canvas-case-study.md)
+- [查看通用项目治理示例模板](examples/project-governance-example.md)
 - [迁移到其他项目](reuse-guide.md)
 - [了解人、AI、Linear 和 GitHub 的职责边界](capability-boundaries.md)
