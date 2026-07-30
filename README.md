@@ -15,11 +15,13 @@
 
 当前版本：`0.1.0-alpha.3` · License：Apache-2.0
 
+> 公开文档全部使用占位符和通用结构，不包含任何实际项目名称、事项编号、仓库地址或 PR 编号。
+
 ## 快速导航
 
 - [五分钟快速开始](docs/quickstart.md)
 - [Linear / GitHub / Codex 集成说明](docs/integrations.md)
-- [Infinite Canvas 真实应用案例](docs/examples/infinite-canvas-case-study.md)
+- [通用项目治理示例模板](docs/examples/project-governance-example.md)
 - [迁移到其他项目](docs/reuse-guide.md)
 - [人、AI、Linear 和 GitHub 的职责边界](docs/capability-boundaries.md)
 - [贡献指南](CONTRIBUTING.md)
@@ -51,7 +53,7 @@ flowchart LR
     G --> H[人工确认与项目决策]
 ```
 
-## 四个角色
+## 五个角色
 
 | 角色 | 负责什么 |
 |---|---|
@@ -78,7 +80,7 @@ AI 负责整理、对账和检查，但不替代负责人承担决策责任。
 
 ```text
 使用 $linear-project-governance 分析下面的用户反馈。
-请先读取当前 Linear 项目并对账，只返回候选事项、重复项和建议关系，不要写入。
+请先读取 <Linear团队或项目> 并对账，只返回候选事项、重复项和建议关系，不要写入。
 
 <粘贴真实反馈、会议记录或项目材料>
 ```
@@ -103,42 +105,47 @@ Skill 会在写入前重新读取目标，并在写入后回读结果。
 ### 运行一次只读审查
 
 ```text
-使用 $linear-delivery-audit 审查这个 Linear 项目最近 30 天的情况。
+使用 $linear-delivery-audit 审查 <Linear项目名称> 最近 30 天的情况。
 GitHub 仓库是 <owner/repo>。
 保持只读，返回问题、证据、影响和建议动作。
 ```
 
 一次性审查不需要 Profile。
 
-## 真实应用：Infinite Canvas
+## 通用应用结构
 
-这套方法已经用于真实的 Infinite Canvas 软件项目。
-
-在 Linear 中建立了两个项目：
-
-- `Infinite Canvas｜需求与决策`
-- `Infinite Canvas｜执行与交付`
-
-真实事项包括：
-
-- `TAI-16`：采用 ChatGPT、Codex 与 Linear 共用的双向治理体系；
-- `TAI-17`：建立两个 Linear 项目、类型标签、模板和原生关系；
-- `TAI-18`：从当前仓库、主 PR、权威文档和真实反馈重建首批有效事项；
-- `TAI-28`：识别长期大型 Draft PR 带来的审查与发布风险。
-
-该案例展示了：
+复杂项目可以在 Linear 中建立两个项目：
 
 ```text
-真实项目材料
-→ AI 提取并与现有事项对账
-→ 人工确认
-→ 写入 Linear 的需求、决策、风险和执行任务
-→ 关联 GitHub 代码与测试证据
-→ AI 反向审查未闭环事项
-→ 人工决定后续动作
+<项目名称>｜需求与决策
+  ├─ REQ 需求
+  ├─ PROB 问题
+  ├─ DEC 决策
+  ├─ CR 变更
+  ├─ RISK 风险
+  └─ Q 待确认问题
+
+<项目名称>｜执行与交付
+  ├─ 分析任务
+  ├─ 实施任务
+  ├─ 验证任务
+  └─ 协作任务
 ```
 
-完整说明见：[Infinite Canvas 真实应用案例](docs/examples/infinite-canvas-case-study.md)。
+典型追踪链：
+
+```text
+<事项编号-DEC> 决策
+  ├─ relatedTo → <事项编号-实施>
+  └─ relatedTo → <事项编号-分析>
+
+<事项编号-RISK> 风险
+  └─ relatedTo → <处理任务编号>
+```
+
+GitHub 中的 `<PR编号>`、`<Commit SHA>`、测试和运行记录作为交付证据，与 Linear 的正式工作事实分开管理。
+
+完整模板见：[通用项目治理示例](docs/examples/project-governance-example.md)。
 
 ## 安装
 
@@ -195,7 +202,7 @@ skills/linear-delivery-audit/references/monthly-automation.md
 - `plan_tool.py`：生成稳定写入计划标识；
 - `profile_tool.py`：生成、封存和验证定期审查配置；
 - 本地安装、升级和备份脚本；
-- 报告模板、项目模板和真实案例；
+- 报告模板、项目模板和占位符示例；
 - 单元测试、源码校验和可复现打包工具。
 
 ## 安全边界
@@ -213,10 +220,9 @@ skills/linear-delivery-audit/references/monthly-automation.md
 
 - 两个可安装 Skills；
 - 基础需求治理和只读交付审查；
-- 真实 Infinite Canvas Linear 双项目落地；
-- 真实决策、实施、分析和风险事项的创建与回读；
+- 单项目和双项目治理模板；
 - 安装、Plan、Profile、测试和打包工具；
-- 公开快速开始、集成、复用和案例文档。
+- 公开快速开始、集成、复用和占位符案例文档。
 
 仍处于 Alpha 验证阶段：
 
@@ -242,7 +248,7 @@ docs/
   reuse-guide.md                    # 迁移到其他项目
   capability-boundaries.md          # 人与 AI 的职责边界
   examples/
-    infinite-canvas-case-study.md   # 真实应用案例
+    project-governance-example.md   # 占位符应用模板
 tests/                              # 工具测试和验证规则
 ```
 
@@ -260,13 +266,13 @@ python tests/validate_skills.py
 
 欢迎提交：
 
-- 安装和兼容性问题；
-- 真实项目复用反馈；
-- Linear / GitHub 连接器差异；
-- 新的证据和审查场景；
-- 文档和测试改进。
+- Bug 报告；
+- 文档改进；
+- 新测试场景；
+- 新连接器适配；
+- 已脱敏且使用占位符的应用模板。
 
-提交前请阅读：[贡献指南](CONTRIBUTING.md)。
+详见：[贡献指南](CONTRIBUTING.md)。
 
 ## License
 
