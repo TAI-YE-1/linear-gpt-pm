@@ -1,32 +1,112 @@
-# Capability Boundaries
+# 能力与职责边界
 
-## Human responsibility
+Linear GPT PM 的目标是提升项目整理、对账和审查效率，不是把项目决策交给 AI。
 
-Humans retain authority for:
+## 人负责什么
 
-- accepting requirements;
-- approving material changes;
-- accepting risk;
-- business acceptance;
-- release decisions;
-- destructive cleanup.
+以下事项始终由人决定：
 
-## Governance Skill
+- 是否接受一个正式需求；
+- 是否批准重大变更；
+- 是否接受项目风险；
+- 是否确认业务验收；
+- 是否发布、合并或部署；
+- 是否执行删除、归档或其他破坏性操作；
+- 如何处理 AI 发现的冲突和异常。
 
-May analyze, reconcile, propose, and execute explicitly confirmed Linear writes. It must read back and verify results.
+AI 可以提供证据、差异和建议，但不能替代责任人签字或确认。
 
-## Audit Skill
+## 需求治理 Skill
 
-Read-only by default. It may write an audit artifact only when that destination and scope are explicitly authorized.
+`$linear-project-governance` 可以：
 
-## Linear
+- 读取用户指定范围内的 Linear 项目和事项；
+- 分析会议、反馈、文档和项目材料；
+- 识别需求、问题、决策、变更、风险和待确认问题；
+- 与现有 Linear 记录对账；
+- 提议新增、更新、拆分和关联操作；
+- 在用户确认 Plan ID 后执行准确的 Linear 写入；
+- 写入后回读并报告成功、冲突或失败结果。
 
-The formal ledger, not a memory substitute. Critical decisions and evidence should be recorded in accessible descriptions, comments, documents or links.
+它不可以：
 
-## GitHub
+- 未经确认直接创建或修改正式事项；
+- 把建议自动升级为已批准需求；
+- 自动接受风险或确认业务完成；
+- 覆盖写入期间已经发生变化的目标。
 
-An optional technical evidence source, not proof of business acceptance. A merged PR does not automatically mean a requirement is accepted or deployed.
+## 交付审查 Skill
 
-## Automation
+`$linear-delivery-audit` 默认只读，可以：
 
-May schedule repeatable audits. It must not broaden its own permissions or silently convert recommendations into formal decisions.
+- 检查任务是否有明确来源；
+- 检查负责人、状态、完成标准和交付证据；
+- 检查需求变更是否传播到相关任务；
+- 对比 Linear 与 GitHub 的代码、PR、测试或运行证据；
+- 识别停滞、重复、阻塞、证据缺失和状态冲突；
+- 返回问题、影响和建议动作；
+- 在明确授权时写入审查文档、审查 Issue、评论或项目状态更新。
+
+它不可以：
+
+- 自动关闭需求或任务；
+- 自动批准变更；
+- 自动接受风险；
+- 自动合并代码、重新运行 CI 或部署；
+- 把缺少访问权限误判为“证据不存在”。
+
+## Linear 的职责
+
+Linear 是正式工作台账，用来记录：
+
+- 为什么要做；
+- 当前有效要求是什么；
+- 谁负责执行；
+- 交付物和完成标准是什么；
+- 当前处于什么状态；
+- 来源、依赖和阻塞关系是什么；
+- 证据、决策和审查结论在哪里。
+
+Linear 不是 AI 的临时记忆，也不应该只存一句任务标题。关键事项需要可访问的描述、关系、评论、文档或证据链接。
+
+## GitHub 的职责
+
+GitHub 是软件交付证据来源，用于证明：
+
+- 哪些代码发生了变化；
+- 变化位于哪个分支、Commit 或 PR；
+- 是否经过 Review、检查和测试；
+- 是否形成 Release、部署或运行结果。
+
+GitHub 不能单独证明业务已经验收：
+
+- PR 已合并 ≠ 需求已接受；
+- 代码已提交 ≠ 已部署；
+- 测试通过 ≠ 用户已经确认效果。
+
+## 自动化的职责
+
+自动化只负责在约定时间重复运行同一套审查规则。
+
+自动化可以：
+
+- 定期读取批准范围内的 Linear 与 GitHub 数据；
+- 生成审查报告；
+- 更新已授权的报告目标；
+- 对比本期和上期异常。
+
+自动化不能：
+
+- 自行扩大项目或仓库范围；
+- 自行增加写权限；
+- 把建议自动转成正式决定；
+- 因为长期无人查看就默认接受风险或完成验收。
+
+## 一条简单原则
+
+```text
+AI 负责整理、对账、检查和提示；
+Linear 负责记录正式工作事实；
+GitHub 负责提供软件交付证据；
+人负责批准、验收和承担最终责任。
+```
