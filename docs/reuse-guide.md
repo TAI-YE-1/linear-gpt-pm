@@ -2,6 +2,8 @@
 
 两个 Skills 与具体项目解耦。迁移到新项目时，通常只调整 Linear 项目结构、标签、关系、证据来源和审查配置，不需要修改 Skill 源码。
 
+本文中的 `<项目名称>`、`<Linear团队>`、`<owner/repo>`、`<事项编号>` 等均为占位符。
+
 ## 先选择使用深度
 
 ### 只整理一次需求
@@ -16,7 +18,7 @@
 
 ```text
 使用 $linear-project-governance 分析这些材料。
-先与当前 Linear 事项对账，只返回候选，不要写入。
+先与 <Linear项目名称> 中的事项对账，只返回候选，不要写入。
 ```
 
 ### 只做一次交付审查
@@ -30,7 +32,8 @@
 - 时间窗口。
 
 ```text
-使用 $linear-delivery-audit 审查这个项目最近 30 天的情况。
+使用 $linear-delivery-audit 审查 <Linear项目名称> 最近 30 天的情况。
+GitHub 仓库为 <owner/repo>。
 保持只读，返回问题、证据和建议动作。
 ```
 
@@ -56,7 +59,7 @@
 适合长期、复杂或需要严格追溯的项目。
 
 ```text
-项目 A：需求与决策
+<项目名称>｜需求与决策
   ├─ REQ 需求
   ├─ PROB 问题
   ├─ DEC 决策
@@ -64,7 +67,7 @@
   ├─ RISK 风险
   └─ Q 待确认问题
 
-项目 B：执行与交付
+<项目名称>｜执行与交付
   ├─ 分析任务
   ├─ 实施任务
   ├─ 验证任务
@@ -73,7 +76,7 @@
 
 执行任务通过 Linear 原生关系连接来源事项。
 
-Infinite Canvas 的真实应用采用双项目模式，详见 [案例页](examples/infinite-canvas-case-study.md)。
+通用结构见：[项目治理应用示例模板](examples/project-governance-example.md)。
 
 ## 新项目需要决定什么
 
@@ -105,7 +108,7 @@ Infinite Canvas 的真实应用采用双项目模式，详见 [案例页](exampl
 - 软件项目使用哪些 GitHub 仓库；
 - 哪些代码、测试、发布或运行记录可以作为证据；
 - 非软件项目使用哪些文档、审批或业务结果；
-- 哪些证据可以复制，哪些只能链接或脱敏摘要。
+- 哪些证据可以复制，哪些只能链接或使用脱敏摘要。
 
 ### 权限
 
@@ -172,20 +175,20 @@ Infinite Canvas 的真实应用采用双项目模式，详见 [案例页](exampl
 cd <installed-linear-delivery-audit-skill>
 python -m pip install -r requirements-runtime.txt
 python scripts/profile_tool.py init project-profile.json `
-  --project-key "demo" `
-  --project-name "Demo Project" `
-  --timezone "Asia/Shanghai" `
-  --owner "Project Owner" `
-  --team "Demo Team" `
-  --project "Demo Delivery"
+  --project-key "<项目短标识>" `
+  --project-name "<项目名称>" `
+  --timezone "<IANA时区>" `
+  --owner "<负责人>" `
+  --team "<Linear团队>" `
+  --project "<执行项目名称>"
 ```
 
 检查后封存：
 
 ```powershell
 python scripts/profile_tool.py seal project-profile.json `
-  --approved-by "Project Owner" `
-  --approval-record "APPROVAL-123"
+  --approved-by "<批准人>" `
+  --approval-record "<批准记录编号>"
 python scripts/profile_tool.py validate project-profile.json
 python scripts/profile_tool.py resolve-period project-profile.json
 ```
@@ -220,5 +223,5 @@ Profile 变化后需要重新检查和批准。
 
 - [快速开始](quickstart.md)
 - [集成说明](integrations.md)
-- [Infinite Canvas 真实应用案例](examples/infinite-canvas-case-study.md)
+- [项目治理应用示例模板](examples/project-governance-example.md)
 - [能力与职责边界](capability-boundaries.md)
